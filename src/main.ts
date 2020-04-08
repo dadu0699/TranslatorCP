@@ -6,6 +6,8 @@ import { environment } from './environments/environment';
 
 import 'codemirror/mode/clike/clike';
 import 'codemirror/mode/python/python';
+import 'codemirror/mode/htmlmixed/htmlmixed';
+import 'codemirror/mode/javascript/javascript';
 import 'codemirror/addon/fold/foldgutter';
 import 'codemirror/addon/fold/brace-fold';
 import 'codemirror/lib/codemirror';

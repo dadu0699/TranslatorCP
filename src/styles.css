@@ -9,7 +9,8 @@ body {
 }
 
 .CodeMirror {
-  font-size: 14px;
+  font-size: 13px;
+  height: 272px;
 }
 
 .bg-dark {
