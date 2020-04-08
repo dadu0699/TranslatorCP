@@ -4,14 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 // External Libraries
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
-import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { AppComponent } from './app.component';
 import { CsEditorComponent } from './component/cs-editor/cs-editor.component';
 import { PythonEditorComponent } from './component/python-editor/python-editor.component';
 import { HtmlEditorComponent } from './component/html-editor/html-editor.component';
 import { JsonEditorComponent } from './component/json-editor/json-editor.component';
+import { SymbolTableComponent } from './component/symbol-table/symbol-table.component';
 
 @NgModule({
   declarations: [
@@ -19,14 +22,17 @@ import { JsonEditorComponent } from './component/json-editor/json-editor.compone
     CsEditorComponent,
     PythonEditorComponent,
     HtmlEditorComponent,
-    JsonEditorComponent
+    JsonEditorComponent,
+    SymbolTableComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     CodemirrorModule,
+    BrowserAnimationsModule,
     MatTabsModule,
-    BrowserAnimationsModule
+    MatTableModule,
+    MatPaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

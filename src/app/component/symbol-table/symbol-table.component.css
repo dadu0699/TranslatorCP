@@ -1,0 +1,38 @@
+table {
+  width: 100%;
+}
+
+tr.mat-header-row {
+  height: 35px;
+  font-size: 15px !important;
+}
+
+.mat-header-cell {
+  color: #F8F8F2FF;
+  background-color: #191A21 !important;
+}
+
+.mat-cell,
+.mat-footer-cell {
+  color: #F8F8F2FF;
+  font-size: 13px;
+}
+
+.mat-table thead,
+.mat-table tbody,
+.mat-table tfoot,
+mat-header-row,
+mat-row,
+mat-footer-row,
+[mat-header-row],
+[mat-row],
+[mat-footer-row],
+.mat-table-sticky {
+  background-color: #282A36FF;
+}
+
+.mat-paginator,
+.mat-paginator-page-size .mat-select-trigger {
+  color: #F8F8F2FF;
+  background-color: #282A36FF;
+}
