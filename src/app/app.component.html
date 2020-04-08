@@ -7,13 +7,29 @@
     <div class="col-12 col-lg-6">
       <app-cs-editor></app-cs-editor>
     </div>
-    <div class="col-12 d-block d-sm-none"><br></div>
+    <div class="col-12 d-block d-sm-block d-md-block d-lg-none"><br></div>
     <div class="col-12 col-lg-6">
       <app-python-editor></app-python-editor>
-      <br>
-      <app-html-editor></app-html-editor>
-      <br>
-      <app-json-editor></app-json-editor>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-12 col-lg-6">
+    </div>
+    <div class="col-12 d-block d-sm-block d-md-block d-lg-none"><br></div>
+    <div class="col-12 col-lg-6">
+      <mat-tab-group class="bg-dark">
+        <mat-tab label="HTML">
+          <ng-template matTabContent>
+            <app-html-editor></app-html-editor>
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="JSON">
+          <ng-template matTabContent>
+            <app-json-editor></app-json-editor>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
     </div>
   </div>
   <br>

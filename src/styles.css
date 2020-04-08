@@ -10,9 +10,28 @@ body {
 
 .CodeMirror {
   font-size: 13px;
-  height: 272px;
+  height: 254px;
 }
 
 .bg-dark {
   background-color: #191A21 !important;
+}
+
+.mat-tab-label,
+.mat-tab-link {
+  color: #F8F8F2FF;
+}
+
+.mat-tab-label-active {
+  opacity: 1 !important;
+  color: white !important;
+}
+
+.mat-tab-label {
+  height: 35px !important;
+}
+
+.mat-tab-label,
+.mat-tab-link {
+  font-size: 14px !important;
 }

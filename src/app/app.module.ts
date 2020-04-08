@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 
 // External Libraries
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { MatTabsModule } from '@angular/material/tabs';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { CsEditorComponent } from './component/cs-editor/cs-editor.component';
@@ -22,7 +24,9 @@ import { JsonEditorComponent } from './component/json-editor/json-editor.compone
   imports: [
     BrowserModule,
     FormsModule,
-    CodemirrorModule
+    CodemirrorModule,
+    MatTabsModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
