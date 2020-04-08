@@ -13,8 +13,8 @@ export class PythonEditorComponent implements OnInit {
   constructor() {
     this.name = 'Python Properties';
     this.codeMirrorPythonOptions = {
-      // theme: 'dracula',
-      theme: 'panda-syntax',
+      theme: 'dracula',
+      // theme: 'panda-syntax',
       mode: 'text/x-python',
       lineNumbers: true,
       lineWrapping: true,
@@ -22,11 +22,13 @@ export class PythonEditorComponent implements OnInit {
       gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
       autoCloseBrackets: true,
       matchBrackets: true,
-      lint: true
+      lint: true,
+      readOnly: true
     };
   }
 
   ngOnInit(): void {
+    this.dataPython = ("def my_function():\n\tprint(\"Hello from a function\")");
   }
 
   setEditorContentPython(event): void {
