@@ -6,26 +6,30 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./cs-editor.component.css']
 })
 export class CsEditorComponent implements OnInit {
-  constructor() { }
+  public name: string;
+  public codeMirrorCSOptions: any;
+  public dataCS;
 
-  name = 'Angular 6';
-  codeMirrorOptions: any = {
-    theme: 'dracula',
-    mode: 'text/x-csharp',
-    lineNumbers: true,
-    lineWrapping: true,
-    foldGutter: true,
-    gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
-    autoCloseBrackets: true,
-    matchBrackets: true,
-    lint: true
-  };
-  obj;
+  constructor() {
+    this.name = 'CSharp Properties';
+    this.codeMirrorCSOptions = {
+      // theme: 'dracula',
+      theme: 'panda-syntax',
+      mode: 'text/x-csharp',
+      lineNumbers: true,
+      lineWrapping: true,
+      foldGutter: true,
+      gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
+      autoCloseBrackets: true,
+      matchBrackets: true,
+      lint: true
+    };
+  }
 
   ngOnInit(): void {
   }
-  setEditorContent(event) {
+  setEditorContentCS(event): void {
     // console.log(event, typeof event);
-    console.log(this.obj);
+    console.log(this.dataCS);
   }
 }

@@ -1,1 +1,3 @@
-<p>python-editor works!</p>
+<ngx-codemirror #codemirror [options]="codeMirrorPythonOptions" [(ngModel)]="dataPython"
+  (ngModelChange)="setEditorContentPython($event)">
+</ngx-codemirror>
