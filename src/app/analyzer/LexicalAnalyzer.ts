@@ -464,7 +464,7 @@ export class LexicalAnalyzer {
     private addError(character: string) {
         this.idError++;
         this.errorList.push(new Error(this.idError, this.row,
-            this.column, character, 'Unknown pattern'));
+            this.column, character, 'Unknown pattern', 'Lexical'));
     }
 
     private isLetter(character: string): boolean {

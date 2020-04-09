@@ -35,9 +35,9 @@ export class Report {
         this.fileContent += '</head>';
         this.fileContent += '<body>';
         this.fileContent += '<div class=\"container\"><br>';
-        this.fileContent += '<h1>Listado de Tokens</h1><hr>';
+        this.fileContent += '<h1>Tokens List</h1><hr>';
         this.fileContent += '<table id=\"example\" class=\"table table - striped table - bordered\" style=\"width: 100 % \">';
-        this.fileContent += '<thead><tr><th>#</th><th>Lexema</th><th>Tipo</th><th>Fila</th><th>Columna</th></tr></thead>';
+        this.fileContent += '<thead><tr><th>#</th><th>Lexeme</th><th>Type</th><th>Row</th><th>Column</th></tr></thead>';
         this.fileContent += '<tbody>';
 
         tokenList.forEach(item => {
@@ -56,7 +56,38 @@ export class Report {
 
         this.footer();
 
-        this.writeContent(this.fileContent, 'tokens.html', 'text/html');
+        this.writeContent(this.fileContent, 'tokenList.html', 'text/html');
+    }
+
+    public generateErrorReport(errorList: Array<Error>): void {
+        this.header();
+        this.fileContent += '<title>Tokens</title>';
+        this.fileContent += '</head>';
+        this.fileContent += '<body>';
+        this.fileContent += '<div class=\"container\"><br>';
+        this.fileContent += '<h1>List of Errors</h1><hr>';
+        this.fileContent += '<table id=\"example\" class=\"table table - striped table - bordered\" style=\"width: 100 % \">';
+        this.fileContent += '<thead><tr><th>#</th><th>Error</th><th>Type</th><th>Description</th><th>Row</th><th>Column</th></tr></thead>';
+        this.fileContent += '<tbody>';
+
+        errorList.forEach(item => {
+            this.fileContent += '<tr>';
+            this.fileContent += '<th>' + item.getIDError() + '</th>';
+            this.fileContent += '<th>' + item.getType() + '</th>';
+            this.fileContent += '<th>' + item.getCharacter() + '</th>';
+            this.fileContent += '<th>' + item.getDescription() + '</th>';
+            this.fileContent += '<th>' + item.getRow() + '</th>';
+            this.fileContent += '<th>' + item.getColumn() + '</th>';
+            this.fileContent += '</tr>';
+        });
+
+        this.fileContent += '</tbody>';
+        this.fileContent += '</table>';
+        this.fileContent += '</div>';
+
+        this.footer();
+
+        this.writeContent(this.fileContent, 'errorList.html', 'text/html');
     }
 
     public writeContent(content, fileName, contentType): void {
