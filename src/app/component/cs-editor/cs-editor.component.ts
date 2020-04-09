@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LexicalAnalyzer } from 'src/app/analyzer/LexicalAnalyzer';
 
 @Component({
   selector: 'app-cs-editor',
@@ -9,6 +10,7 @@ export class CsEditorComponent implements OnInit {
   public name: string;
   public codeMirrorCSOptions: any;
   public dataCS;
+  public lex: LexicalAnalyzer;
 
   constructor() {
     this.name = 'CSharp Properties';
@@ -24,6 +26,8 @@ export class CsEditorComponent implements OnInit {
       matchBrackets: true,
       lint: true
     };
+
+    this.lex = new LexicalAnalyzer();
   }
 
   ngOnInit(): void {
@@ -31,5 +35,6 @@ export class CsEditorComponent implements OnInit {
   setEditorContentCS(event): void {
     // console.log(event, typeof event);
     console.log(this.dataCS);
+    this.lex.scanner(this.dataCS);
   }
 }
