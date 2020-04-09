@@ -1,7 +1,6 @@
 import { Token } from 'src/app/model/Token';
 import { Type } from 'src/app/model/Token';
 import { Error } from 'src/app/model/Error';
-import { isSymbol } from 'util';
 
 export class LexicalAnalyzer {
     private auxiliary: string;
@@ -28,7 +27,7 @@ export class LexicalAnalyzer {
         let character: string;
         entry += '#';
 
-        for (let i = 0; i < (entry.length - 1); i++) {
+        for (let i = 0; i < entry.length; i++) {
             character = entry.charAt(i);
             switch (this.state) {
                 case 0: {
@@ -458,6 +457,8 @@ export class LexicalAnalyzer {
         this.idToken++;
         this.tokenList.push(new Token(this.idToken, this.row,
             this.column - this.auxiliary.length, type, this.auxiliary));
+        this.auxiliary = '';
+        this.state = 0;
     }
 
     private addError(character: string) {
@@ -485,5 +486,11 @@ export class LexicalAnalyzer {
 
     private isWhiteSpace(character: string): boolean {
         return (/^\s*$/.test(character));
+    }
+
+    public getTokenList(): void {
+        this.tokenList.forEach(element => {
+            console.log(element.getValue() + ' ' + element.toStringTypeToken());
+        });
     }
 };

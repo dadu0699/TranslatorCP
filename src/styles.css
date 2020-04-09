@@ -10,7 +10,7 @@ body {
 
 .CodeMirror {
   font-size: 13px;
-  height: 250px;
+  height: 248px;
 }
 
 .bg-dark {
@@ -34,4 +34,18 @@ body {
 .mat-tab-label,
 .mat-tab-link {
   font-size: 14px !important;
+}
+
+.mat-tab-group.mat-primary .mat-ink-bar,
+.mat-tab-nav-bar.mat-primary .mat-ink-bar {
+  background-color: #E91E63FF;
+}
+
+.mat-tab-group.mat-background-primary .mat-tab-header,
+.mat-tab-group.mat-background-primary .mat-tab-links,
+.mat-tab-group.mat-background-primary .mat-tab-header-pagination,
+.mat-tab-nav-bar.mat-background-primary .mat-tab-header,
+.mat-tab-nav-bar.mat-background-primary .mat-tab-links,
+.mat-tab-nav-bar.mat-background-primary .mat-tab-header-pagination {
+  background-color: #E91E63FF;
 }

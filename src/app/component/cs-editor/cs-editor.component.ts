@@ -26,15 +26,14 @@ export class CsEditorComponent implements OnInit {
       matchBrackets: true,
       lint: true
     };
-
-    this.lex = new LexicalAnalyzer();
   }
 
   ngOnInit(): void {
   }
-  setEditorContentCS(event): void {
-    // console.log(event, typeof event);
-    // console.log(this.dataCS);
+
+  analyze(): void {
+    this.lex = new LexicalAnalyzer();
     this.lex.scanner(this.dataCS);
+    this.lex.getTokenList();
   }
 }
