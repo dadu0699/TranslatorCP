@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Report } from 'src/app/util/Report';
 
 @Component({
   selector: 'app-python-editor',
@@ -34,5 +35,12 @@ export class PythonEditorComponent implements OnInit {
   setEditorContentPython(event): void {
     // console.log(event, typeof event);
     console.log(this.dataPython);
+  }
+
+  saveDocument(): void {
+    if (this.dataPython) {
+      let report: Report = new Report();
+      report.writeContent(this.dataPython, 'translation.py', 'text/python');
+    }
   }
 }

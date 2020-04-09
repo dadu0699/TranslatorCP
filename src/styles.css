@@ -10,7 +10,7 @@ body {
 
 .CodeMirror {
   font-size: 13px;
-  height: 248px;
+  height: 271px;
 }
 
 .bg-dark {
@@ -48,4 +48,58 @@ body {
 .mat-tab-nav-bar.mat-background-primary .mat-tab-links,
 .mat-tab-nav-bar.mat-background-primary .mat-tab-header-pagination {
   background-color: #E91E63FF;
+}
+
+.commands {
+  height: 25px !important;
+}
+
+.mat-button,
+.mat-icon-button,
+.mat-stroked-button,
+.mat-flat-button {
+  line-height: 24px;
+  border-radius: 24px;
+}
+
+.material-icons {
+  font-size: 24px;
+}
+
+.mat-icon-button {
+  width: 24px;
+  height: 24px;
+}
+
+.mat-button .mat-button-wrapper>*,
+.mat-flat-button .mat-button-wrapper>*,
+.mat-stroked-button .mat-button-wrapper>*,
+.mat-raised-button .mat-button-wrapper>*,
+.mat-icon-button .mat-button-wrapper>*,
+.mat-fab .mat-button-wrapper>*,
+.mat-mini-fab .mat-button-wrapper>* {
+  vertical-align: text-bottom;
+}
+
+.mat-button.mat-primary,
+.mat-icon-button.mat-primary,
+.mat-stroked-button.mat-primary {
+  color: #E91E63FF;
+}
+
+.mat-button.mat-primary .mat-button-focus-overlay,
+.mat-icon-button.mat-primary .mat-button-focus-overlay,
+.mat-stroked-button.mat-primary .mat-button-focus-overlay {
+  background-color: #E91E63FF;
+}
+
+.mat-icon.mat-primary {
+  color: #E91E63FF;
+}
+
+.mat-step-header .mat-step-icon-selected,
+.mat-step-header .mat-step-icon-state-done,
+.mat-step-header .mat-step-icon-state-edit {
+  background-color: #E91E63FF;
+  color: #fff
 }

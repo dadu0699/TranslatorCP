@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LexicalAnalyzer } from 'src/app/analyzer/LexicalAnalyzer';
+import { Token } from 'src/app/model/Token';
+import { Report } from 'src/app/util/Report';
 
 @Component({
   selector: 'app-cs-editor',
@@ -11,6 +13,7 @@ export class CsEditorComponent implements OnInit {
   public codeMirrorCSOptions: any;
   public dataCS;
   public lex: LexicalAnalyzer;
+  private tokenList: Array<Token>;
 
   constructor() {
     this.name = 'CSharp Properties';
@@ -26,14 +29,21 @@ export class CsEditorComponent implements OnInit {
       matchBrackets: true,
       lint: true
     };
+
+    this.tokenList = [];
   }
 
   ngOnInit(): void {
   }
 
   analyze(): void {
-    this.lex = new LexicalAnalyzer();
-    this.lex.scanner(this.dataCS);
-    this.lex.getTokenList();
+    if (this.dataCS) {
+      this.lex = new LexicalAnalyzer();
+      this.lex.scanner(this.dataCS);
+      this.tokenList = this.lex.getTokenList();
+
+      let report: Report = new Report();
+      report.generateTokenReport(this.tokenList);
+    }
   }
 }

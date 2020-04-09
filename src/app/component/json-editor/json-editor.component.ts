@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Report } from 'src/app/util/Report';
 
 @Component({
   selector: 'app-json-editor',
@@ -45,5 +46,12 @@ export class JsonEditorComponent implements OnInit {
   setEditorContentJSON(event): void {
     // console.log(event, typeof event);
     console.log(this.dataJSON);
+  }
+
+  saveDocument(): void {
+    if (this.dataJSON) {
+      let report: Report = new Report();
+      report.writeContent(this.dataJSON, 'translation.json', 'text/json');
+    }
   }
 }

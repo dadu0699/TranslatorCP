@@ -488,9 +488,7 @@ export class LexicalAnalyzer {
         return (/^\s*$/.test(character));
     }
 
-    public getTokenList(): void {
-        this.tokenList.forEach(element => {
-            console.log(element.getValue() + ' ' + element.toStringTypeToken());
-        });
+    public getTokenList(): Array<Token> {
+        return this.tokenList;
     }
 };

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Report } from 'src/app/util/Report';
 
 @Component({
   selector: 'app-html-editor',
@@ -36,5 +37,12 @@ export class HtmlEditorComponent implements OnInit {
   setEditorContentHTML(event): void {
     // console.log(event, typeof event);
     console.log(this.dataHTML);
+  }
+
+  saveDocument(): void {
+    if (this.dataHTML) {
+      let report: Report = new Report();
+      report.writeContent(this.dataHTML, 'translation.html', 'text/html');
+    }
   }
 }
