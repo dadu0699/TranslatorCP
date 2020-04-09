@@ -34,7 +34,7 @@ export class CsEditorComponent implements OnInit {
   }
   setEditorContentCS(event): void {
     // console.log(event, typeof event);
-    console.log(this.dataCS);
+    // console.log(this.dataCS);
     this.lex.scanner(this.dataCS);
   }
 }

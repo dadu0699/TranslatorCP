@@ -77,6 +77,22 @@ export class Token {
         this.value = value;
     }
 
+    public getIDToken(): number {
+        return this.idToken;
+    }
+
+    public getRow(): number {
+        return this.row;
+    }
+
+    public getColumn(): number {
+        return this.column;
+    }
+
+    public getValue(): string {
+        return this.value;
+    }
+
     public toStringTypeToken(): string {
         switch (this.typeToken) {
             case Type.RESERVED_BOOL: {
