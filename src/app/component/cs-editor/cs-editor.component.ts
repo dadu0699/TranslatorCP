@@ -19,10 +19,9 @@ export class CsEditorComponent implements OnInit {
     this.name = 'CSharp Properties';
     this.codeMirrorCSOptions = {
       theme: 'dracula',
-      // theme: 'panda-syntax',
       mode: 'text/x-csharp',
       lineNumbers: true,
-      lineWrapping: true,
+      lineWrapping: false,
       foldGutter: true,
       gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
       autoCloseBrackets: true,

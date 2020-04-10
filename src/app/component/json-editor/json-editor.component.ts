@@ -15,10 +15,9 @@ export class JsonEditorComponent implements OnInit {
     this.name = 'JSON Properties';
     this.codeMirrorJSONOptions = {
       theme: 'dracula',
-      // theme: 'panda-syntax',
       mode: 'application/json',
       lineNumbers: true,
-      lineWrapping: true,
+      lineWrapping: false,
       foldGutter: true,
       gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
       autoCloseBrackets: true,

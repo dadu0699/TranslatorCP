@@ -15,10 +15,9 @@ export class HtmlEditorComponent implements OnInit {
     this.name = 'HTML Properties';
     this.codeMirrorHTMLOptions = {
       theme: 'dracula',
-      // theme: 'panda-syntax',
       mode: 'text/html',
       lineNumbers: true,
-      lineWrapping: true,
+      lineWrapping: false,
       foldGutter: true,
       gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
       autoCloseBrackets: true,

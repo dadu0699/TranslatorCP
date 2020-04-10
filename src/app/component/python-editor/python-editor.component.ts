@@ -15,10 +15,9 @@ export class PythonEditorComponent implements OnInit {
     this.name = 'Python Properties';
     this.codeMirrorPythonOptions = {
       theme: 'dracula',
-      // theme: 'panda-syntax',
       mode: 'text/x-python',
       lineNumbers: true,
-      lineWrapping: true,
+      lineWrapping: false,
       foldGutter: true,
       gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
       autoCloseBrackets: true,
