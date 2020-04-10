@@ -93,6 +93,10 @@ export class Token {
         return this.value;
     }
 
+    public getTypeToken(): Type {
+        return this.typeToken;
+    }
+
     public toStringTypeToken(): string {
         switch (this.typeToken) {
             case Type.RESERVED_BOOL: {
