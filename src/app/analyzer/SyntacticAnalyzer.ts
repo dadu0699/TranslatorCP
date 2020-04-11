@@ -65,20 +65,8 @@ export class SyntacticAnalyzer {
     }
 
     private bodyClassP(): void {
-        if (this.preAnalysis.getTypeToken() == Type.RESERVED_VOID
-            || this.preAnalysis.getTypeToken() == Type.RESERVED_INT
-            || this.preAnalysis.getTypeToken() == Type.RESERVED_STRING
-            || this.preAnalysis.getTypeToken() == Type.RESERVED_DOUBLE
-            || this.preAnalysis.getTypeToken() == Type.RESERVED_BOOL
-            || this.preAnalysis.getTypeToken() == Type.RESERVED_CHAR) {
-            this.method();
-        } else if (this.preAnalysis.getTypeToken() == Type.COMMENT
-            || this.preAnalysis.getTypeToken() == Type.MULTILINE_COMMENT) {
-            this.commentary();
-        }
-        else {
-            this.addError('Was expected \'METHOD | COMMENT\'');
-        }
+        this.method();
+        this.commentary();
     }
 
     private method(): void {
@@ -543,18 +531,16 @@ export class SyntacticAnalyzer {
     private parser(type: Type): void {
         if (this.index < this.tokenList.length - 1) {
             if (this.syntacticError) {
-
-                console.log(type + ' - ' + this.preAnalysis.getValue());
-
                 this.index++;
                 this.preAnalysis = this.tokenList[this.index];
-
-                console.log('>> ' + type + ' - ' + this.preAnalysis.getValue());
-
                 if (this.preAnalysis.getTypeToken() == Type.SYMBOL_SEMICOLON
                     || this.preAnalysis.getTypeToken() == Type.SYMBOL_LEFT_CURLY_BRACKET
                     || this.preAnalysis.getTypeToken() == Type.SYMBOL_RIGHT_CURLY_BRACKET) {
                     this.syntacticError = false;
+                    if (this.preAnalysis.getTypeToken() == Type.SYMBOL_SEMICOLON) {
+                        this.index--;
+                        this.preAnalysis = this.tokenList[this.index];
+                    }
                 }
             } else {
                 if (this.preAnalysis.getTypeToken() == type) {
@@ -562,8 +548,6 @@ export class SyntacticAnalyzer {
                     this.preAnalysis = this.tokenList[this.index];
                 } else {
                     this.addError(this.preAnalysis.getValue() + ' Was expected \'' + type + '\'');
-
-                    console.log('ERROR ' + type + ' - ' + this.preAnalysis.getValue());
                 }
             }
         }
