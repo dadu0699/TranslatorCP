@@ -351,7 +351,7 @@ export class SyntacticAnalyzer {
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_AND
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_OR) {
             this.operator();
-            this.expression();
+            this.condition();
         }
     }
 
@@ -513,8 +513,17 @@ export class SyntacticAnalyzer {
             || this.preAnalysis.getTypeToken() == Type.STR
             || this.preAnalysis.getTypeToken() == Type.CHARACTER
             || this.preAnalysis.getTypeToken() == Type.RESERVED_TRUE
-            || this.preAnalysis.getTypeToken() == Type.RESERVED_FALSE) {
-            this.expression();
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_FALSE
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_LESS_THAN
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN_OETS
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN_OETS
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_COMPARISON
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_INEQUALITY
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_AND
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_OR
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_NOT) {
+            this.condition();
         }
     }
 

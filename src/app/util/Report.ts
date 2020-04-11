@@ -61,7 +61,7 @@ export class Report {
 
     public generateErrorReport(errorList: Array<Error>): void {
         this.header();
-        this.fileContent += '<title>Tokens</title>';
+        this.fileContent += '<title>Errors</title>';
         this.fileContent += '</head>';
         this.fileContent += '<body>';
         this.fileContent += '<div class=\"container\"><br>';

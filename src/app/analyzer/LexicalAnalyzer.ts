@@ -183,6 +183,8 @@ export class LexicalAnalyzer {
                     } else {
                         this.auxiliary += character;
                         this.addToken(Type.COMMENT);
+                        this.column = 1;
+                        this.row++;
                     }
                     break;
                 }
@@ -190,6 +192,11 @@ export class LexicalAnalyzer {
                     if (character !== '*') {
                         this.state = 10;
                         this.auxiliary += character;
+                        // Change row and restart columns in line breaks
+                        if (character === '\n') {
+                            this.column = 1;
+                            this.row++;
+                        }
                     } else {
                         this.state = 11;
                         this.auxiliary += character;
@@ -200,6 +207,11 @@ export class LexicalAnalyzer {
                     if (character !== '/') {
                         this.state = 10;
                         this.auxiliary += character;
+                        // Change row and restart columns in line breaks
+                        if (character === '\n') {
+                            this.column = 1;
+                            this.row++;
+                        }
                     } else {
                         this.auxiliary += character;
                         this.addToken(Type.MULTILINE_COMMENT);
