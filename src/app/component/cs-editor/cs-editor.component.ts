@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LexicalAnalyzer } from 'src/app/analyzer/LexicalAnalyzer';
+import { SyntacticAnalyzer } from 'src/app/analyzer/SyntacticAnalyzer';
 import { Token } from 'src/app/model/Token';
 import { Report } from 'src/app/util/Report';
 
@@ -13,6 +14,7 @@ export class CsEditorComponent implements OnInit {
   public codeMirrorCSOptions: any;
   public dataCS;
   public lex: LexicalAnalyzer;
+  public synt: SyntacticAnalyzer;
   private tokenList: Array<Token>;
 
   constructor() {
@@ -42,7 +44,12 @@ export class CsEditorComponent implements OnInit {
       this.tokenList = this.lex.getTokenList();
 
       let report: Report = new Report();
-      report.generateTokenReport(this.tokenList);
+      //report.generateTokenReport(this.tokenList);
+
+      if (this.lex.getErrorList().length <= 0) {
+        this.synt = new SyntacticAnalyzer(this.tokenList);
+        //report.generateErrorReport(this.synt.getErrorList());
+      }
     }
   }
 }
