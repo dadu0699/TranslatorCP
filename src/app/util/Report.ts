@@ -5,10 +5,10 @@ export class Report {
     private fileContent: string;
 
     constructor() {
-        this.fileContent = '';
     }
 
     private header(): void {
+        this.fileContent = '';
         this.fileContent += '<!doctype html>';
         this.fileContent += '<html lang=\"es\">';
         this.fileContent += '<head>';
