@@ -52,7 +52,7 @@ export class LexicalAnalyzer {
                     } else if (character === '>') { // Greater than AND Greater than or Equal to
                         this.state = 7;
                         this.auxiliary += character;
-                    } else if (character === '/') { // Division, Single Line Comments AND Multiline Comment
+                    } else if (character === '/') { // Division, Single Line Comment AND Multiline Comment
                         this.state = 8;
                         this.auxiliary += character;
                     } else if (character === '\'') { // Character AND HTML
@@ -295,6 +295,11 @@ export class LexicalAnalyzer {
                 this.addToken(Type.SYMBOL_LEFT_PARENTHESIS);
                 return true;
             }
+            case ')': {
+                this.auxiliary += character;
+                this.addToken(Type.SYMBOL_RIGHT_PARENTHESIS);
+                return true;
+            }
             case '[': {
                 this.auxiliary += character;
                 this.addToken(Type.SYMBOL_LEFT_SQUARE_BRACKET);
@@ -490,5 +495,9 @@ export class LexicalAnalyzer {
 
     public getTokenList(): Array<Token> {
         return this.tokenList;
+    }
+
+    public getErrorList(): Array<Error> {
+        return this.errorList;
     }
 };
