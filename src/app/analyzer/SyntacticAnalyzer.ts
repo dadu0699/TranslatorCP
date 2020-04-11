@@ -90,6 +90,7 @@ export class SyntacticAnalyzer {
             || this.tokenList[this.index - 2].getTypeToken() == Type.RESERVED_BOOL
             || this.tokenList[this.index - 2].getTypeToken() == Type.RESERVED_CHAR)
             && (this.tokenList[this.index].getTypeToken() == Type.SYMBOL_EQUALS
+                || this.tokenList[this.index].getTypeToken() == Type.SYMBOL_COMMA
                 || this.tokenList[this.index].getTypeToken() == Type.SYMBOL_SEMICOLON)) {
             this.index -= 2;
             this.preAnalysis = this.tokenList[this.index];
@@ -216,12 +217,12 @@ export class SyntacticAnalyzer {
     private declaration(): void {
         this.type();
         this.idList();
-        this.assignVariable();
         this.parser(Type.SYMBOL_SEMICOLON);
     }
 
     private idList(): void {
         this.parser(Type.ID);
+        this.assignVariable();
         this.idListP();
     }
 
@@ -356,8 +357,17 @@ export class SyntacticAnalyzer {
             || this.preAnalysis.getTypeToken() == Type.STR
             || this.preAnalysis.getTypeToken() == Type.CHARACTER
             || this.preAnalysis.getTypeToken() == Type.RESERVED_TRUE
-            || this.preAnalysis.getTypeToken() == Type.RESERVED_FALSE) {
-            this.expression();
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_FALSE
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_LESS_THAN
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN_OETS
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN_OETS
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_COMPARISON
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_INEQUALITY
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_AND
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_OR
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_NOT) {
+            this.condition();
         } else if (this.preAnalysis.getTypeToken() == Type.HTML) {
             this.parser(Type.HTML);
         } else {
@@ -454,6 +464,9 @@ export class SyntacticAnalyzer {
     private elseifStatement(): void {
         if (this.preAnalysis.getTypeToken() == Type.RESERVED_IF) {
             this.parser(Type.RESERVED_IF);
+            this.parser(Type.SYMBOL_LEFT_PARENTHESIS);
+            this.condition();
+            this.parser(Type.SYMBOL_RIGHT_PARENTHESIS);
         }
     }
 
