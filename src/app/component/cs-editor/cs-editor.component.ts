@@ -48,7 +48,7 @@ export class CsEditorComponent implements OnInit {
 
       if (this.lex.getErrorList().length <= 0) {
         this.synt = new SyntacticAnalyzer(this.tokenList);
-        //report.generateErrorReport(this.synt.getErrorList());
+        report.generateErrorReport(this.synt.getErrorList());
       }
     }
   }

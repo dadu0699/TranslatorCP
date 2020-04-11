@@ -47,7 +47,6 @@ export class SyntacticAnalyzer {
         }
         else {
             this.addError('Was expected \'Single Line Comment | Multiline Comment\'');
-            this.syntacticError = true;
         }
     }
 
@@ -66,8 +65,20 @@ export class SyntacticAnalyzer {
     }
 
     private bodyClassP(): void {
-        this.method();
-        this.commentary();
+        if (this.preAnalysis.getTypeToken() == Type.RESERVED_VOID
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_INT
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_STRING
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_DOUBLE
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_BOOL
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_CHAR) {
+            this.method();
+        } else if (this.preAnalysis.getTypeToken() == Type.COMMENT
+            || this.preAnalysis.getTypeToken() == Type.MULTILINE_COMMENT) {
+            this.commentary();
+        }
+        else {
+            this.addError('Was expected \'METHOD | COMMENT\'');
+        }
     }
 
     private method(): void {
@@ -102,7 +113,6 @@ export class SyntacticAnalyzer {
             this.type();
         } else {
             this.addError('Was expected \'type of method\'');
-            this.syntacticError = true;
         }
     }
 
@@ -119,16 +129,11 @@ export class SyntacticAnalyzer {
             this.parser(Type.RESERVED_CHAR);
         } else {
             this.addError('Was expected \'string | int | double | bool | char\'');
-            this.syntacticError = true;
         }
     }
 
     private methodParameter(): void {
-        if (this.preAnalysis.getTypeToken() == Type.RESERVED_INT
-            || this.preAnalysis.getTypeToken() == Type.RESERVED_STRING
-            || this.preAnalysis.getTypeToken() == Type.RESERVED_DOUBLE
-            || this.preAnalysis.getTypeToken() == Type.RESERVED_BOOL
-            || this.preAnalysis.getTypeToken() == Type.RESERVED_CHAR) {
+        if (this.preAnalysis.getTypeToken() != Type.SYMBOL_RIGHT_PARENTHESIS) {
             this.parameter();
         }
     }
@@ -273,7 +278,6 @@ export class SyntacticAnalyzer {
             this.parser(Type.RESERVED_FALSE);
         } else {
             this.addError('Was expected \'( | digit | decimal | ID | string | char | true | false\'');
-            this.syntacticError = true;
         }
     }
 
@@ -288,7 +292,6 @@ export class SyntacticAnalyzer {
             this.parser(Type.SYMBOL_DIVISION);
         } else {
             this.addError('Was expected \'+ | - | * | /\'');
-            this.syntacticError = true;
         }
     }
 
@@ -299,7 +302,6 @@ export class SyntacticAnalyzer {
             this.parser(Type.SYMBOL_DECREMENT);
         } else {
             this.addError('Was expected \'++ | --\'');
-            this.syntacticError = true;
         }
     }
 
@@ -333,7 +335,6 @@ export class SyntacticAnalyzer {
             this.parser(Type.HTML);
         } else {
             this.addError('Was expected \'EXPRESSION | HTML\'');
-            this.syntacticError = true;
         }
     }
 
@@ -393,7 +394,6 @@ export class SyntacticAnalyzer {
             this.parser(Type.SYMBOL_OR);
         } else {
             this.addError('Was expected \'&& | ||\'');
-            this.syntacticError = true;
         }
     }
 
@@ -412,7 +412,6 @@ export class SyntacticAnalyzer {
             this.parser(Type.SYMBOL_INEQUALITY);
         } else {
             this.addError('Was expected \'> | < | >= | <= | == | !=\'');
-            this.syntacticError = true;
         }
     }
 
@@ -486,7 +485,6 @@ export class SyntacticAnalyzer {
             this.assignment();
         } else {
             this.addError('Was expected \'DECLARATION | ASSIGNMENT\'');
-            this.syntacticError = true;
         }
     }
 
@@ -544,11 +542,18 @@ export class SyntacticAnalyzer {
 
     private parser(type: Type): void {
         if (this.index < this.tokenList.length - 1) {
-            console.log(this.preAnalysis.getValue());
             if (this.syntacticError) {
+
+                console.log(type + ' - ' + this.preAnalysis.getValue());
+
                 this.index++;
                 this.preAnalysis = this.tokenList[this.index];
-                if (this.preAnalysis.getTypeToken() == Type.SYMBOL_SEMICOLON) {
+
+                console.log('>> ' + type + ' - ' + this.preAnalysis.getValue());
+
+                if (this.preAnalysis.getTypeToken() == Type.SYMBOL_SEMICOLON
+                    || this.preAnalysis.getTypeToken() == Type.SYMBOL_LEFT_CURLY_BRACKET
+                    || this.preAnalysis.getTypeToken() == Type.SYMBOL_RIGHT_CURLY_BRACKET) {
                     this.syntacticError = false;
                 }
             } else {
@@ -557,7 +562,8 @@ export class SyntacticAnalyzer {
                     this.preAnalysis = this.tokenList[this.index];
                 } else {
                     this.addError(this.preAnalysis.getValue() + ' Was expected \'' + type + '\'');
-                    this.syntacticError = true;
+
+                    console.log('ERROR ' + type + ' - ' + this.preAnalysis.getValue());
                 }
             }
         }
@@ -568,6 +574,7 @@ export class SyntacticAnalyzer {
         this.errorList.push(new Error(this.idError, this.preAnalysis.getRow(),
             this.preAnalysis.getColumn(), this.preAnalysis.toStringTypeToken(),
             description, 'Syntactic'));
+        this.syntacticError = true;
     }
 
     public getErrorList(): Array<Error> {
