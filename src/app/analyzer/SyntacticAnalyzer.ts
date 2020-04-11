@@ -84,10 +84,22 @@ export class SyntacticAnalyzer {
     private methodP(): void {
         this.methodType();
         this.parser(Type.ID);
-        this.parser(Type.SYMBOL_LEFT_PARENTHESIS);
-        this.methodParameter();
-        this.parser(Type.SYMBOL_RIGHT_PARENTHESIS);
-        this.body();
+        if ((this.tokenList[this.index - 2].getTypeToken() == Type.RESERVED_INT
+            || this.tokenList[this.index - 2].getTypeToken() == Type.RESERVED_STRING
+            || this.tokenList[this.index - 2].getTypeToken() == Type.RESERVED_DOUBLE
+            || this.tokenList[this.index - 2].getTypeToken() == Type.RESERVED_BOOL
+            || this.tokenList[this.index - 2].getTypeToken() == Type.RESERVED_CHAR)
+            && (this.tokenList[this.index].getTypeToken() == Type.SYMBOL_EQUALS
+                || this.tokenList[this.index].getTypeToken() == Type.SYMBOL_SEMICOLON)) {
+            this.index -= 2;
+            this.preAnalysis = this.tokenList[this.index];
+            this.declaration();
+        } else {
+            this.parser(Type.SYMBOL_LEFT_PARENTHESIS);
+            this.methodParameter();
+            this.parser(Type.SYMBOL_RIGHT_PARENTHESIS);
+            this.body();
+        }
     }
 
     private methodType(): void {
