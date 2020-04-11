@@ -268,6 +268,7 @@ export class SyntacticAnalyzer {
             this.parser(Type.DECIMAL);
         } else if (this.preAnalysis.getTypeToken() == Type.ID) {
             this.parser(Type.ID);
+            this.invokeMethod();
         } else if (this.preAnalysis.getTypeToken() == Type.STR) {
             this.parser(Type.STR);
         } else if (this.preAnalysis.getTypeToken() == Type.CHARACTER) {
@@ -278,6 +279,32 @@ export class SyntacticAnalyzer {
             this.parser(Type.RESERVED_FALSE);
         } else {
             this.addError('Was expected \'( | digit | decimal | ID | string | char | true | false\'');
+        }
+    }
+
+    private invokeMethod(): void {
+        if (this.preAnalysis.getTypeToken() == Type.SYMBOL_LEFT_PARENTHESIS) {
+            this.parser(Type.SYMBOL_LEFT_PARENTHESIS);
+            if (this.preAnalysis.getTypeToken() == Type.SYMBOL_LEFT_PARENTHESIS
+                || this.preAnalysis.getTypeToken() == Type.DIGIT
+                || this.preAnalysis.getTypeToken() == Type.DECIMAL
+                || this.preAnalysis.getTypeToken() == Type.ID
+                || this.preAnalysis.getTypeToken() == Type.STR
+                || this.preAnalysis.getTypeToken() == Type.CHARACTER
+                || this.preAnalysis.getTypeToken() == Type.RESERVED_TRUE
+                || this.preAnalysis.getTypeToken() == Type.RESERVED_FALSE) {
+                this.expression();
+                this.invokeMethodP();
+            }
+            this.parser(Type.SYMBOL_RIGHT_PARENTHESIS);
+        }
+    }
+
+    private invokeMethodP(): void {
+        if (this.preAnalysis.getTypeToken() == Type.SYMBOL_COMMA) {
+            this.parser(Type.SYMBOL_COMMA);
+            this.expression();
+            this.invokeMethodP();
         }
     }
 
