@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 import { LexicalAnalyzer } from 'src/app/analyzer/LexicalAnalyzer';
 import { SyntacticAnalyzer } from 'src/app/analyzer/SyntacticAnalyzer';
 import { Token } from 'src/app/model/Token';
@@ -17,7 +19,7 @@ export class CsEditorComponent implements OnInit {
   public synt: SyntacticAnalyzer;
   private tokenList: Array<Token>;
 
-  constructor() {
+  constructor(private _snackBar: MatSnackBar) {
     this.name = 'CSharp Properties';
     this.codeMirrorCSOptions = {
       theme: 'dracula',
@@ -44,11 +46,22 @@ export class CsEditorComponent implements OnInit {
       this.tokenList = this.lex.getTokenList();
 
       let report: Report = new Report();
-      //report.generateTokenReport(this.tokenList);
+      this._snackBar.open('Lexical analysis completed', 'close', { duration: 2000 });
+      // report.generateTokenReport(this.tokenList);
 
-      if (this.lex.getErrorList().length <= 0) {
+      if (this.lex.getErrorList().length == 0) {
         this.synt = new SyntacticAnalyzer(this.tokenList);
-        report.generateErrorReport(this.synt.getErrorList());
+
+        if (this.synt.getErrorList().length > 0) {
+          this._snackBar.open('Syntactic errors', 'close', { duration: 2000 });
+          report.generateErrorReport(this.synt.getErrorList());
+        } else {
+          this._snackBar.open('Syntactic analysis completed', 'close', { duration: 2000 });
+        }
+
+      } else {
+        this._snackBar.open('Lexical errors', 'close', { duration: 2000 });
+        // report.generateErrorReport(this.lex.getErrorList());
       }
     }
   }

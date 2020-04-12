@@ -274,6 +274,8 @@ export class SyntacticAnalyzer {
             this.parser(Type.STR);
         } else if (this.preAnalysis.getTypeToken() == Type.CHARACTER) {
             this.parser(Type.CHARACTER);
+        } else if (this.preAnalysis.getTypeToken() == Type.HTML) {
+            this.parser(Type.HTML);
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_TRUE) {
             this.parser(Type.RESERVED_TRUE);
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_FALSE) {
@@ -292,6 +294,7 @@ export class SyntacticAnalyzer {
                 || this.preAnalysis.getTypeToken() == Type.ID
                 || this.preAnalysis.getTypeToken() == Type.STR
                 || this.preAnalysis.getTypeToken() == Type.CHARACTER
+                || this.preAnalysis.getTypeToken() == Type.HTML
                 || this.preAnalysis.getTypeToken() == Type.RESERVED_TRUE
                 || this.preAnalysis.getTypeToken() == Type.RESERVED_FALSE) {
                 this.expression();
@@ -356,6 +359,7 @@ export class SyntacticAnalyzer {
             || this.preAnalysis.getTypeToken() == Type.ID
             || this.preAnalysis.getTypeToken() == Type.STR
             || this.preAnalysis.getTypeToken() == Type.CHARACTER
+            || this.preAnalysis.getTypeToken() == Type.HTML
             || this.preAnalysis.getTypeToken() == Type.RESERVED_TRUE
             || this.preAnalysis.getTypeToken() == Type.RESERVED_FALSE
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN
@@ -564,6 +568,7 @@ export class SyntacticAnalyzer {
             || this.preAnalysis.getTypeToken() == Type.ID
             || this.preAnalysis.getTypeToken() == Type.STR
             || this.preAnalysis.getTypeToken() == Type.CHARACTER
+            || this.preAnalysis.getTypeToken() == Type.HTML
             || this.preAnalysis.getTypeToken() == Type.RESERVED_TRUE
             || this.preAnalysis.getTypeToken() == Type.RESERVED_FALSE
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN
