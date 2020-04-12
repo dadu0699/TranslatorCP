@@ -360,7 +360,7 @@ export class LexicalAnalyzer {
                 break;
             }
             case 'break': {
-                this.addToken(Type.RESERVED_BOOL);
+                this.addToken(Type.RESERVED_BREAK);
                 break;
             }
             case 'case': {

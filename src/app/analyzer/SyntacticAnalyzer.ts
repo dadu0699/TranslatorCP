@@ -394,7 +394,7 @@ export class SyntacticAnalyzer {
         if (this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_LESS_THAN
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN_OETS
-            || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN_OETS
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_LESS_THAN_OETS
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_COMPARISON
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_INEQUALITY
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_AND
@@ -417,7 +417,7 @@ export class SyntacticAnalyzer {
         } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_LESS_THAN
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN_OETS
-            || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN_OETS
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_LESS_THAN_OETS
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_COMPARISON
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_INEQUALITY) {
             this.relational();
@@ -585,7 +585,7 @@ export class SyntacticAnalyzer {
     }
 
     private continueStatement(): void {
-        this.parser(Type.RESERVED_RETURN);
+        this.parser(Type.RESERVED_CONTINUE);
         this.parser(Type.SYMBOL_SEMICOLON);
     }
 
@@ -598,10 +598,11 @@ export class SyntacticAnalyzer {
                     || this.preAnalysis.getTypeToken() == Type.SYMBOL_LEFT_CURLY_BRACKET
                     || this.preAnalysis.getTypeToken() == Type.SYMBOL_RIGHT_CURLY_BRACKET) {
                     this.syntacticError = false;
-                    if (this.preAnalysis.getTypeToken() == Type.SYMBOL_SEMICOLON) {
-                        this.index--;
-                        this.preAnalysis = this.tokenList[this.index];
-                    }
+                    /* if (this.preAnalysis.getTypeToken() == Type.SYMBOL_SEMICOLON) {
+                         this.index--;
+                         this.preAnalysis = this.tokenList[this.index];
+                        }
+                    */
                 }
             } else {
                 if (this.preAnalysis.getTypeToken() == type) {
