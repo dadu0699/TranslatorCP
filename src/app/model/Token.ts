@@ -59,7 +59,8 @@ export enum Type {
     CHARACTER = 'CHARACTER',
     HTML = 'HTML',
     COMMENT = 'SINGLE LINE COMMENT',
-    MULTILINE_COMMENT = 'MULTILINE COMMENT'
+    MULTILINE_COMMENT = 'MULTILINE COMMENT',
+    EOF = 'END OF FILE'
 }
 
 export class Token {

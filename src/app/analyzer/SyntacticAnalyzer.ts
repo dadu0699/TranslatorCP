@@ -12,6 +12,7 @@ export class SyntacticAnalyzer {
 
     constructor(tokenList: Array<Token>) {
         this.tokenList = tokenList;
+        this.tokenList.push(new Token(null, null, null, Type.EOF, null))
         this.index = 0;
         this.preAnalysis = this.tokenList[0];
         this.syntacticError = false;
@@ -35,6 +36,7 @@ export class SyntacticAnalyzer {
     private commentary(): void {
         if (this.preAnalysis.getTypeToken() == Type.COMMENT
             || this.preAnalysis.getTypeToken() == Type.MULTILINE_COMMENT) {
+            console.log('Hay comentario')
             this.commentaryP();
             this.commentary();
         }
@@ -42,8 +44,10 @@ export class SyntacticAnalyzer {
 
     private commentaryP(): void {
         if (this.preAnalysis.getTypeToken() == Type.COMMENT) {
+            console.log('Hay comentario1')
             this.parser(Type.COMMENT);
         } else if (this.preAnalysis.getTypeToken() == Type.MULTILINE_COMMENT) {
+            console.log('Hay comentario2')
             this.parser(Type.MULTILINE_COMMENT);
         }
         else {
@@ -596,7 +600,7 @@ export class SyntacticAnalyzer {
     }
 
     private parser(type: Type): void {
-        if (this.index < this.tokenList.length - 1) {
+        if (this.preAnalysis.getTypeToken() != Type.EOF) {
             if (this.syntacticError) {
                 this.index++;
                 this.preAnalysis = this.tokenList[this.index];
