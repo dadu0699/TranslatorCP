@@ -310,16 +310,6 @@ export class LexicalAnalyzer {
                 this.addToken(Type.SYMBOL_RIGHT_PARENTHESIS);
                 return true;
             }
-            case '[': {
-                this.auxiliary += character;
-                this.addToken(Type.SYMBOL_LEFT_SQUARE_BRACKET);
-                return true;
-            }
-            case ']': {
-                this.auxiliary += character;
-                this.addToken(Type.SYMBOL_RIGHT_SQUARE_BRACKET);
-                return true;
-            }
             case ',': {
                 this.auxiliary += character;
                 this.addToken(Type.SYMBOL_COMMA);
@@ -397,10 +387,6 @@ export class LexicalAnalyzer {
                 this.addToken(Type.RESERVED_FALSE);
                 break;
             }
-            case 'float': {
-                this.addToken(Type.RESERVED_FLOAT);
-                break;
-            }
             case 'for': {
                 this.addToken(Type.RESERVED_FOR);
                 break;
@@ -413,20 +399,8 @@ export class LexicalAnalyzer {
                 this.addToken(Type.RESERVED_INT);
                 break;
             }
-            case 'new': {
-                this.addToken(Type.RESERVED_NEW);
-                break;
-            }
-            case 'null': {
-                this.addToken(Type.RESERVED_NULL);
-                break;
-            }
             case 'return': {
                 this.addToken(Type.RESERVED_RETURN);
-                break;
-            }
-            case 'static': {
-                this.addToken(Type.RESERVED_STATIC);
                 break;
             }
             case 'string': {
@@ -451,10 +425,6 @@ export class LexicalAnalyzer {
             }
             case 'Console': {
                 this.addToken(Type.RESERVED_CONSOLE);
-                break;
-            }
-            case 'WriteLine': {
-                this.addToken(Type.RESERVED_WRITELINE);
                 break;
             }
             case 'Write': {

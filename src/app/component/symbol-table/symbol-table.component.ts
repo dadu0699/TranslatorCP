@@ -21,7 +21,7 @@ export class SymbolTableComponent implements OnInit {
   }
 }
 
-const ELEMENT_DATA: Symbol[] = [
+const ELEMENT_DATA: Array<Symbol> = [
   new Symbol(1, 'int', 'a', '', 1),
   new Symbol(2, 'int', 'b', '', 2),
   new Symbol(3, 'int', 'c', '', 3),

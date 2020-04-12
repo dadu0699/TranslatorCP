@@ -34,6 +34,7 @@ mat-footer-row,
 
 .mat-paginator,
 .mat-paginator-page-size .mat-select-trigger {
+  font-size: 13px;
   color: #F8F8F2FF;
   background-color: #282A36FF;
 }
