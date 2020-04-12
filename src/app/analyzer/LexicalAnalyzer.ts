@@ -25,8 +25,7 @@ export class LexicalAnalyzer {
 
     public scanner(entry: string): void {
         let character: string;
-        entry += '#';
-
+        entry += '\n#';
         for (let i = 0; i < entry.length; i++) {
             character = entry.charAt(i);
             switch (this.state) {
@@ -194,7 +193,6 @@ export class LexicalAnalyzer {
                         this.auxiliary += character;
                         // Change row and restart columns in line breaks
                         if (character === '\n') {
-                            this.column = 1;
                             this.row++;
                         }
                     } else {

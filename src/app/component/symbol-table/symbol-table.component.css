@@ -8,6 +8,7 @@ tr.mat-header-row {
 }
 
 .mat-header-cell {
+  font-size: 14px;
   color: #F8F8F2FF;
   background-color: #191A21 !important;
 }

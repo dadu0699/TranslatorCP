@@ -19,6 +19,7 @@ export class SyntacticAnalyzer {
         this.errorList = [];
 
         this.start();
+        console.log('Syntactic analysis completed');
     }
 
     private start(): void {
@@ -623,7 +624,7 @@ export class SyntacticAnalyzer {
     private addError(description: string): void {
         this.idError++;
         this.errorList.push(new Error(this.idError, this.preAnalysis.getRow(),
-            this.preAnalysis.getColumn(), this.preAnalysis.toStringTypeToken(),
+            this.preAnalysis.getColumn(), this.preAnalysis.getTypeToken(),
             description, 'Syntactic'));
         this.syntacticError = true;
     }

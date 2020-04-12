@@ -61,7 +61,7 @@ export class CsEditorComponent implements OnInit {
 
       } else {
         this._snackBar.open('Lexical errors', 'close', { duration: 2000 });
-        // report.generateErrorReport(this.lex.getErrorList());
+        report.generateErrorReport(this.lex.getErrorList());
       }
     }
   }

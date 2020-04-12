@@ -44,7 +44,7 @@ export class Report {
             this.fileContent += '<tr>';
             this.fileContent += '<th>' + item.getIDToken() + '</th>';
             this.fileContent += '<th>' + item.getValue() + '</th>';
-            this.fileContent += '<th>' + item.toStringTypeToken() + '</th>';
+            this.fileContent += '<th>' + item.getTypeToken() + '</th>';
             this.fileContent += '<th>' + item.getRow() + '</th>';
             this.fileContent += '<th>' + item.getColumn() + '</th>';
             this.fileContent += '</tr>';
