@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { LexicalAnalyzer } from 'src/app/analyzer/LexicalAnalyzer';
 import { SyntacticAnalyzer } from 'src/app/analyzer/SyntacticAnalyzer';
+import { Translator } from 'src/app/util/Translator';
 import { Token } from 'src/app/model/Token';
 import { Report } from 'src/app/util/Report';
 
@@ -57,6 +58,8 @@ export class CsEditorComponent implements OnInit {
           report.generateErrorReport(this.synt.getErrorList());
         } else {
           this._snackBar.open('Syntactic analysis completed', 'close', { duration: 2000 });
+          let trans: Translator = new Translator(this.lex.getTokenList());
+          report.writeContent(trans.getTranslate(), 'translation.py', 'text/python');
         }
 
       } else {
