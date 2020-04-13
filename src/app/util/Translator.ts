@@ -224,7 +224,7 @@ export class Translator {
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_IF) {
             this.ifStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_SWITCH) {
-            // this.switchStatement();
+            this.switchStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_FOR) {
             // this.forStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_WHILE) {
@@ -307,15 +307,26 @@ export class Translator {
             || this.preAnalysis.getTypeToken() == Type.DECIMAL
             || this.preAnalysis.getTypeToken() == Type.STR
             || this.preAnalysis.getTypeToken() == Type.CHARACTER
-            || this.preAnalysis.getTypeToken() == Type.HTML
-            || this.preAnalysis.getTypeToken() == Type.RESERVED_TRUE
-            || this.preAnalysis.getTypeToken() == Type.RESERVED_FALSE) {
+            || this.preAnalysis.getTypeToken() == Type.HTML) {
             this.translate += this.preAnalysis.getValue();
-            this.nextToken(); // DIGIT DECIMAL STR CHARACTER HTML TRUE FALSE
+            this.nextToken();
+            /*
+                DIGIT 
+                DECIMAL 
+                STR 
+                CHARACTER 
+                HTML 
+            */
         } else if (this.preAnalysis.getTypeToken() == Type.ID) {
             this.translate += this.preAnalysis.getValue();
             this.nextToken(); // ID
             this.invokeMethod();
+        } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_TRUE) {
+            this.translate += 'True';
+            this.nextToken(); // TRUE
+        } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_FALSE) {
+            this.translate += 'False';
+            this.nextToken(); // FALSE
         }
     }
 
@@ -350,7 +361,7 @@ export class Translator {
     }
 
     private arithmetic(): void {
-        this.translate += this.preAnalysis.getValue();
+        this.translate += ' ' + this.preAnalysis.getValue() + ' ';
         this.nextToken();
         /*  SYMBOL_PLUS
             SYMBOL_MINUS 
@@ -458,7 +469,7 @@ export class Translator {
 
     private not(): void {
         if (this.preAnalysis.getTypeToken() == Type.SYMBOL_NOT) {
-            this.translate += 'not ';
+            this.translate += ' not ';
             this.nextToken(); // SYMBOL_NOT
         }
     }
@@ -479,10 +490,10 @@ export class Translator {
 
     private logical(): void {
         if (this.preAnalysis.getTypeToken() == Type.SYMBOL_AND) {
-            this.translate += 'and ';
+            this.translate += ' and ';
             this.nextToken(); // SYMBOL_AND
         } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_OR) {
-            this.translate += 'or ';
+            this.translate += ' or ';
             this.nextToken(); // SYMBOL_OR
         }
     }
@@ -494,7 +505,7 @@ export class Translator {
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_LESS_THAN_OETS
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_COMPARISON
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_INEQUALITY) {
-            this.translate += this.preAnalysis.getValue();
+            this.translate += ' ' + this.preAnalysis.getValue() + ' ';
             this.nextToken();
             /*  SYMBOL_GREATER_THAN 
                 SYMBOL_LESS_THAN 
@@ -526,6 +537,69 @@ export class Translator {
             this.nextToken(); // SYMBOL_RIGHT_PARENTHESIS
         } else {
             this.translate += 'else:';
+        }
+    }
+
+    private switchStatement(): void {
+        this.translate += '\n';
+        this.addIndentation();
+        this.translate += 'def ' + this.preAnalysis.getValue();
+        this.nextToken(); // RESERVED_SWITCH
+        this.translate += this.preAnalysis.getValue() + 'case, ';
+        this.nextToken(); // SYMBOL_LEFT_PARENTHESIS
+        this.condition();
+        this.translate += this.preAnalysis.getValue();
+        this.nextToken(); // SYMBOL_RIGHT_PARENTHESIS
+        this.counterTabulations++;
+        this.nextToken(); // SYMBOL_LEFT_CURLY_BRACKET
+
+        this.translate += '\n';
+        this.addIndentation();
+        this.translate += 'switcher = {';
+        this.counterTabulations++;
+        this.caseStatement();
+        this.defaultStatement();
+
+        this.counterTabulations--;
+        this.translate += '\n';
+        this.addIndentation();
+        this.translate += '}';
+        this.nextToken(); // SYMBOL_RIGHT_CURLY_BRACKET
+        this.counterTabulations--;
+    }
+
+    private caseStatement(): void {
+        if (this.preAnalysis.getTypeToken() == Type.RESERVED_CASE) {
+            this.caseStatementP();
+            this.caseStatement();
+        }
+    }
+
+    private caseStatementP(): void {
+        this.translate += '\n';
+        this.addIndentation();
+        this.nextToken(); // RESERVED_CASE
+        this.expression();
+        this.translate += this.preAnalysis.getValue() + ' ';
+        this.nextToken(); // SYMBOL_COLON
+        this.counterTabulations++;
+        this.instruction();
+        this.translate += ',';
+        this.counterTabulations--;
+    }
+
+    private defaultStatement(): void {
+        if (this.preAnalysis.getTypeToken() == Type.RESERVED_DEFAULT) {
+            this.translate += '\n';
+            this.addIndentation();
+            this.translate += this.preAnalysis.getValue();
+            this.nextToken(); // RESERVED_DEFAULT
+            this.translate += this.preAnalysis.getValue() + ' ';
+            this.nextToken(); // SYMBOL_COLON
+            this.counterTabulations++;
+            this.instruction();
+            this.translate += ',';
+            this.counterTabulations--;
         }
     }
 
