@@ -516,6 +516,8 @@ export class Translator {
     }
 
     private elseifStatement(): void {
+        this.translate += '\n';
+        this.addIndentation();
         if (this.preAnalysis.getTypeToken() == Type.RESERVED_IF) {
             this.translate += 'elif ';
             this.nextToken(); // RESERVED_IF
