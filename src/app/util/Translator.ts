@@ -21,11 +21,11 @@ export class Translator {
 
     private start(): void {
         this.commentary();
-        this.parser(Type.RESERVED_CLASS);
-        this.parser(Type.ID);
-        this.parser(Type.SYMBOL_LEFT_CURLY_BRACKET);
+        this.nextToken(); // RESERVED_CLASS
+        this.nextToken(); // ID
+        this.nextToken(); // SYMBOL_LEFT_CURLY_BRACKET
         this.bodyClass();
-        this.parser(Type.SYMBOL_RIGHT_CURLY_BRACKET);
+        this.nextToken(); // SYMBOL_RIGHT_CURLY_BRACKET
         this.commentary();
     }
 
@@ -39,25 +39,30 @@ export class Translator {
 
     private commentaryP(): void {
         if (this.preAnalysis.getTypeToken() == Type.COMMENT) {
-            this.translate += this.preAnalysis.getValue().replace('//', '#');
-            this.parser(Type.COMMENT);
+            this.translate += '\n';
+            this.addIndentation();
+            this.translate += this.preAnalysis.getValue().replace('//', '#').replace('\n', '');
+            this.nextToken(); // COMMENT
         } else if (this.preAnalysis.getTypeToken() == Type.MULTILINE_COMMENT) {
+            this.translate += '\n';
+            this.addIndentation();
             let comment: string = this.preAnalysis.getValue()
-                .replace('\t', '').replace('/*', '\'\'\'').replace('*/', '\'\'\'');
+                .replace('\t', '')
+                .replace('/*', '/*\n').replace('/*', '\'\'\'')
+                .replace('*/', '\n*/').replace('*/', '\'\'\'');
 
             let splitComment: Array<string> = comment.split('\n');
             this.translate += splitComment[0] + '\n';
-            this.counterTabulations++;
             for (let i = 1; i < (splitComment.length - 1); i++) {
+                this.addIndentation();
                 this.translate += '    ';
                 this.translate += splitComment[i].trim();
                 this.translate += '\n';
             }
-            this.counterTabulations--;
+            this.addIndentation();
             this.translate += splitComment[splitComment.length - 1].trim();
-            this.translate += '\n';
 
-            this.parser(Type.MULTILINE_COMMENT);
+            this.nextToken(); // MULTILINE_COMMENT
         }
     }
 
@@ -94,8 +99,7 @@ export class Translator {
 
     private methodP(): void {
         this.methodType();
-
-        this.parser(Type.ID);
+        this.nextToken(); // ID
         if ((this.tokenList[this.index - 2].getTypeToken() == Type.RESERVED_INT
             || this.tokenList[this.index - 2].getTypeToken() == Type.RESERVED_STRING
             || this.tokenList[this.index - 2].getTypeToken() == Type.RESERVED_DOUBLE
@@ -110,27 +114,31 @@ export class Translator {
         } else {
             let rMain: boolean = (this.tokenList[this.index - 1].getValue() == 'main');
 
-            this.translate += '\ndef '
+            this.translate += '\n';
+            this.addIndentation();
+            this.translate += 'def '
             this.translate += this.tokenList[this.index - 1].getValue();
 
             this.translate += this.preAnalysis.getValue();
-            this.parser(Type.SYMBOL_LEFT_PARENTHESIS);
+            this.nextToken(); // SYMBOL_LEFT_PARENTHESIS
 
             this.methodParameter();
 
-            this.translate += this.preAnalysis.getValue() + ':\n';
-            this.parser(Type.SYMBOL_RIGHT_PARENTHESIS);
+            this.translate += this.preAnalysis.getValue() + ':';
+            this.nextToken(); // SYMBOL_RIGHT_PARENTHESIS
             this.body();
 
             if (rMain) {
-                this.translate += '\nif __name__ == "__main__":\n\tmain()\n'
+                this.translate += '\n';
+                this.addIndentation();
+                this.translate += 'if __name__ == "__main__":\n    main()'
             }
         }
     }
 
     private methodType(): void {
         if (this.preAnalysis.getTypeToken() == Type.RESERVED_VOID) {
-            this.parser(Type.RESERVED_VOID);
+            this.nextToken(); // RESERVED_VOID
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_INT
             || this.preAnalysis.getTypeToken() == Type.RESERVED_STRING
             || this.preAnalysis.getTypeToken() == Type.RESERVED_DOUBLE
@@ -141,16 +149,12 @@ export class Translator {
     }
 
     private type(): void {
-        if (this.preAnalysis.getTypeToken() == Type.RESERVED_INT) {
-            this.parser(Type.RESERVED_INT);
-        } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_STRING) {
-            this.parser(Type.RESERVED_STRING);
-        } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_DOUBLE) {
-            this.parser(Type.RESERVED_DOUBLE);
-        } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_BOOL) {
-            this.parser(Type.RESERVED_BOOL);
-        } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_CHAR) {
-            this.parser(Type.RESERVED_CHAR);
+        if (this.preAnalysis.getTypeToken() == Type.RESERVED_INT
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_STRING
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_DOUBLE
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_BOOL
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_CHAR) {
+            this.nextToken(); // RESERVED_INT RESERVED_STRING RESERVED_DOUBLE RESERVED_BOOL RESERVED_CHAR
         }
     }
 
@@ -162,29 +166,24 @@ export class Translator {
 
     private parameter(): void {
         this.type();
-
         this.translate += this.preAnalysis.getValue();
-        this.parser(Type.ID);
-
+        this.nextToken() // ID
         this.parameterP();
     }
 
     private parameterP(): void {
         if (this.preAnalysis.getTypeToken() == Type.SYMBOL_COMMA) {
-
             this.translate += this.preAnalysis.getValue() + ' ';
-            this.parser(Type.SYMBOL_COMMA);
-
+            this.nextToken(); // SYMBOL_COMMA
             this.parameter();
         }
     }
 
     private body(): void {
         this.counterTabulations++;
-        this.parser(Type.SYMBOL_LEFT_CURLY_BRACKET);
-        this.addIndentation();
+        this.nextToken(); // SYMBOL_LEFT_CURLY_BRACKET
         this.instruction();
-        this.parser(Type.SYMBOL_RIGHT_CURLY_BRACKET);
+        this.nextToken(); // SYMBOL_RIGHT_CURLY_BRACKET
         this.counterTabulations--;
     }
 
@@ -225,19 +224,19 @@ export class Translator {
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_IF) {
             this.ifStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_SWITCH) {
-            this.switchStatement();
+            // this.switchStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_FOR) {
-            //this.forStatement();
+            // this.forStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_WHILE) {
-            //this.whileStatement();
+            // this.whileStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_DO) {
-            //this.doStatement();
+            // this.doStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_RETURN) {
-            //this.returnStatement();
+            // this.returnStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_BREAK) {
-            //this.breakStatement();
+            // this.breakStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_CONTINUE) {
-            //this.continueStatement();
+            // this.continueStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.COMMENT
             || this.preAnalysis.getTypeToken() == Type.MULTILINE_COMMENT) {
             this.commentary();
@@ -245,20 +244,27 @@ export class Translator {
     }
 
     private declaration(): void {
+        this.translate += '\n';
+        this.addIndentation();
         this.type();
         this.idList();
-        this.parser(Type.SYMBOL_SEMICOLON);
+        this.nextToken(); // SYMBOL_SEMICOLON
     }
 
     private idList(): void {
-        this.parser(Type.ID);
+        this.nextToken(); // ID
         this.assignVariable();
+        if (this.tokenList[this.index - 2].getTypeToken() == Type.SYMBOL_EQUALS
+            && this.tokenList[this.index].getTypeToken() != Type.SYMBOL_SEMICOLON) {
+            this.translate += '\n';
+            this.addIndentation();
+        }
         this.idListP();
     }
 
     private idListP(): void {
         if (this.preAnalysis.getTypeToken() == Type.SYMBOL_COMMA) {
-            this.parser(Type.SYMBOL_COMMA);
+            this.nextToken(); // SYMBOL_COMMA
             this.idList();
         }
     }
@@ -267,14 +273,12 @@ export class Translator {
         if (this.preAnalysis.getTypeToken() == Type.SYMBOL_EQUALS) {
             this.translate += this.tokenList[this.index - 1].getValue() + ' ';
             this.translate += this.preAnalysis.getValue() + ' ';
-            this.parser(Type.SYMBOL_EQUALS);
+            this.nextToken(); // SYMBOL_EQUALS
             this.expression();
-            this.translate += '\n';
         } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_INCREMENT
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_DECREMENT) {
             this.iterator();
         }
-        this.addIndentation();
     }
 
     private expression(): void {
@@ -293,38 +297,32 @@ export class Translator {
     }
 
     private factor(): void {
-        this.translate += this.preAnalysis.getValue();
         if (this.preAnalysis.getTypeToken() == Type.SYMBOL_LEFT_PARENTHESIS) {
-            this.parser(Type.SYMBOL_LEFT_PARENTHESIS);
+            this.translate += this.preAnalysis.getValue();
+            this.nextToken(); // SYMBOL_LEFT_PARENTHESIS
             this.expression();
             this.translate += this.preAnalysis.getValue();
-            this.parser(Type.SYMBOL_RIGHT_PARENTHESIS);
-        } else if (this.preAnalysis.getTypeToken() == Type.DIGIT) {
-            this.parser(Type.DIGIT);
-        } else if (this.preAnalysis.getTypeToken() == Type.DECIMAL) {
-            this.parser(Type.DECIMAL);
+            this.nextToken(); // SYMBOL_RIGHT_PARENTHESIS
+        } else if (this.preAnalysis.getTypeToken() == Type.DIGIT
+            || this.preAnalysis.getTypeToken() == Type.DECIMAL
+            || this.preAnalysis.getTypeToken() == Type.STR
+            || this.preAnalysis.getTypeToken() == Type.CHARACTER
+            || this.preAnalysis.getTypeToken() == Type.HTML
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_TRUE
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_FALSE) {
+            this.translate += this.preAnalysis.getValue();
+            this.nextToken(); // DIGIT DECIMAL STR CHARACTER HTML TRUE FALSE
         } else if (this.preAnalysis.getTypeToken() == Type.ID) {
-            this.parser(Type.ID);
+            this.translate += this.preAnalysis.getValue();
+            this.nextToken(); // ID
             this.invokeMethod();
-        } else if (this.preAnalysis.getTypeToken() == Type.STR) {
-            this.parser(Type.STR);
-        } else if (this.preAnalysis.getTypeToken() == Type.CHARACTER) {
-            this.parser(Type.CHARACTER);
-        } else if (this.preAnalysis.getTypeToken() == Type.HTML) {
-            this.parser(Type.HTML);
-        } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_TRUE) {
-            this.parser(Type.RESERVED_TRUE);
-        } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_FALSE) {
-            this.parser(Type.RESERVED_FALSE);
         }
     }
 
     private invokeMethod(): void {
         if (this.preAnalysis.getTypeToken() == Type.SYMBOL_LEFT_PARENTHESIS) {
-
             this.translate += this.preAnalysis.getValue();
-            this.parser(Type.SYMBOL_LEFT_PARENTHESIS);
-
+            this.nextToken(); // SYMBOL_LEFT_PARENTHESIS
             if (this.preAnalysis.getTypeToken() == Type.SYMBOL_LEFT_PARENTHESIS
                 || this.preAnalysis.getTypeToken() == Type.DIGIT
                 || this.preAnalysis.getTypeToken() == Type.DECIMAL
@@ -337,18 +335,15 @@ export class Translator {
                 this.expression();
                 this.invokeMethodP();
             }
-
             this.translate += this.preAnalysis.getValue();
-            this.parser(Type.SYMBOL_RIGHT_PARENTHESIS);
+            this.nextToken(); // SYMBOL_RIGHT_PARENTHESIS
         }
     }
 
     private invokeMethodP(): void {
         if (this.preAnalysis.getTypeToken() == Type.SYMBOL_COMMA) {
-
             this.translate += this.preAnalysis.getValue() + ' ';
-            this.parser(Type.SYMBOL_COMMA);
-
+            this.nextToken(); // SYMBOL_COMMA
             this.expression();
             this.invokeMethodP();
         }
@@ -356,47 +351,48 @@ export class Translator {
 
     private arithmetic(): void {
         this.translate += this.preAnalysis.getValue();
-        if (this.preAnalysis.getTypeToken() == Type.SYMBOL_PLUS) {
-            this.parser(Type.SYMBOL_PLUS);
-        } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_MINUS) {
-            this.parser(Type.SYMBOL_MINUS);
-        } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_MULTIPLICATION) {
-            this.parser(Type.SYMBOL_MULTIPLICATION);
-        } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_DIVISION) {
-            this.parser(Type.SYMBOL_DIVISION);
-        }
+        this.nextToken();
+        /*  SYMBOL_PLUS
+            SYMBOL_MINUS 
+            SYMBOL_MULTIPLICATION 
+            SYMBOL_DIVISION
+        */
     }
 
     private iterator(): void {
         this.translate += this.preAnalysis.getValue();
         if (this.preAnalysis.getTypeToken() == Type.SYMBOL_INCREMENT) {
             this.translate += '+= 1';
-            this.parser(Type.SYMBOL_INCREMENT);
+            this.nextToken(); // SYMBOL_INCREMENT
         } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_DECREMENT) {
             this.translate += '-= 1';
-            this.parser(Type.SYMBOL_DECREMENT);
+            this.nextToken(); // SYMBOL_DECREMENT
         }
     }
 
     private assignment(): void {
-        this.parser(Type.ID);
+        this.translate += '\n';
+        this.addIndentation();
+        this.nextToken(); // ID
         this.assignVariable();
-        this.parser(Type.SYMBOL_SEMICOLON);
+        this.nextToken(); // SYMBOL_SEMICOLON
     }
 
     private printStatement(): void {
-        this.parser(Type.RESERVED_CONSOLE);
-        this.parser(Type.SYMBOL_DOT);
-        this.parser(Type.RESERVED_WRITE);
+        this.nextToken(); // RESERVED_CONSOLE
+        this.nextToken(); // SYMBOL_DOT
+        this.nextToken(); // RESERVED_WRITE
 
+        this.translate += '\n';
+        this.addIndentation();
         this.translate += 'print';
         this.translate += this.preAnalysis.getValue();
-        this.parser(Type.SYMBOL_LEFT_PARENTHESIS);
+        this.nextToken(); // SYMBOL_LEFT_PARENTHESIS
         this.printValue();
 
         this.translate += this.preAnalysis.getValue();
-        this.parser(Type.SYMBOL_RIGHT_PARENTHESIS);
-        this.parser(Type.SYMBOL_SEMICOLON);
+        this.nextToken(); // SYMBOL_RIGHT_PARENTHESIS
+        this.nextToken(); // SYMBOL_SEMICOLON
     }
 
     private printValue(): void {
@@ -421,19 +417,21 @@ export class Translator {
             this.condition();
         } else if (this.preAnalysis.getTypeToken() == Type.HTML) {
             this.translate += this.preAnalysis.getValue();
-            this.parser(Type.HTML);
+            this.nextToken(); // HTML
         }
     }
 
     private ifStatement(): void {
+        this.translate += '\n';
+        this.addIndentation();
         this.translate += this.preAnalysis.getValue() + ' ';
-        this.parser(Type.RESERVED_IF);
+        this.nextToken(); // RESERVED_IF
 
-        this.parser(Type.SYMBOL_LEFT_PARENTHESIS);
+        this.nextToken(); // SYMBOL_LEFT_PARENTHESIS
         this.condition();
-        this.parser(Type.SYMBOL_RIGHT_PARENTHESIS);
+        this.nextToken(); // SYMBOL_RIGHT_PARENTHESIS
 
-        this.translate += ':\n';
+        this.translate += ':';
         this.body();
         this.elseStatement();
     }
@@ -461,7 +459,7 @@ export class Translator {
     private not(): void {
         if (this.preAnalysis.getTypeToken() == Type.SYMBOL_NOT) {
             this.translate += 'not ';
-            this.parser(Type.SYMBOL_NOT);
+            this.nextToken(); // SYMBOL_NOT
         }
     }
 
@@ -482,35 +480,36 @@ export class Translator {
     private logical(): void {
         if (this.preAnalysis.getTypeToken() == Type.SYMBOL_AND) {
             this.translate += 'and ';
-            this.parser(Type.SYMBOL_AND);
+            this.nextToken(); // SYMBOL_AND
         } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_OR) {
             this.translate += 'or ';
-            this.parser(Type.SYMBOL_OR);
+            this.nextToken(); // SYMBOL_OR
         }
     }
 
     private relational(): void {
-        this.translate += this.preAnalysis.getValue();
-        if (this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN) {
-            this.parser(Type.SYMBOL_GREATER_THAN);
-        } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_LESS_THAN) {
-            this.parser(Type.SYMBOL_LESS_THAN);
-        } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN_OETS) {
-            this.parser(Type.SYMBOL_GREATER_THAN_OETS);
-        } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_LESS_THAN_OETS) {
-            this.parser(Type.SYMBOL_LESS_THAN_OETS);
-        } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_COMPARISON) {
-            this.parser(Type.SYMBOL_COMPARISON);
-        } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_INEQUALITY) {
-            this.parser(Type.SYMBOL_INEQUALITY);
+        if (this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_LESS_THAN
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN_OETS
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_LESS_THAN_OETS
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_COMPARISON
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_INEQUALITY) {
+            this.translate += this.preAnalysis.getValue();
+            this.nextToken();
+            /*  SYMBOL_GREATER_THAN 
+                SYMBOL_LESS_THAN 
+                SYMBOL_GREATER_THAN_OETS
+                SYMBOL_LESS_THAN_OETS
+                SYMBOL_COMPARISON
+                SYMBOL_INEQUALITY
+            */
         }
     }
 
     private elseStatement(): void {
         if (this.preAnalysis.getTypeToken() == Type.RESERVED_ELSE) {
-            this.parser(Type.RESERVED_ELSE);
+            this.nextToken(); // RESERVED_ELSE
             this.elseifStatement();
-            this.translate += '\n';
             this.body();
             this.elseStatement();
         }
@@ -519,86 +518,16 @@ export class Translator {
     private elseifStatement(): void {
         if (this.preAnalysis.getTypeToken() == Type.RESERVED_IF) {
             this.translate += 'elif ';
-            this.parser(Type.RESERVED_IF);
-            this.parser(Type.SYMBOL_LEFT_PARENTHESIS);
+            this.nextToken(); // RESERVED_IF
+            this.nextToken(); // SYMBOL_LEFT_PARENTHESIS
             this.condition();
-            this.parser(Type.SYMBOL_RIGHT_PARENTHESIS);
+            this.nextToken(); // SYMBOL_RIGHT_PARENTHESIS
         } else {
             this.translate += 'else:';
         }
     }
 
-    private switchStatement(): void {
-        this.translate += 'def ' + this.preAnalysis.getValue() + ' ';
-        this.parser(Type.RESERVED_SWITCH);
-
-        this.translate += this.preAnalysis.getValue() + ' ';
-        this.parser(Type.SYMBOL_LEFT_PARENTHESIS);
-        this.condition();
-
-        this.translate += this.preAnalysis.getValue() + ':\n';
-        this.parser(Type.SYMBOL_RIGHT_PARENTHESIS);
-
-        this.translate += 'switcher = ' + this.preAnalysis.getValue() + '\n';
-        this.counterTabulations++;
-        this.parser(Type.SYMBOL_LEFT_CURLY_BRACKET);
-
-        this.caseStatement();
-        this.defaultStatement();
-
-        this.translate += this.preAnalysis.getValue() + '\n';
-        this.parser(Type.SYMBOL_RIGHT_CURLY_BRACKET);
-        this.counterTabulations--;
-    }
-
-    private caseStatement(): void {
-        this.addIndentation();
-        if (this.preAnalysis.getTypeToken() == Type.RESERVED_CASE) {
-            this.caseStatementP();
-            this.caseStatement();
-        }
-    }
-
-    private caseStatementP(): void {
-        this.parser(Type.RESERVED_CASE);
-        this.expression();
-
-        this.translate += this.preAnalysis.getValue() + ' ';
-        this.parser(Type.SYMBOL_COLON);
-
-        this.instruction();
-        this.translate += ',';
-    }
-
-    private defaultStatement(): void {
-        this.addIndentation();
-        if (this.preAnalysis.getTypeToken() == Type.RESERVED_DEFAULT) {
-            this.translate += this.preAnalysis.getValue();
-            this.parser(Type.RESERVED_DEFAULT);
-
-            this.translate += this.preAnalysis.getValue() + ' ';
-            this.parser(Type.SYMBOL_COLON);
-
-            this.instruction();
-            this.translate += ',';
-        }
-    }
-
-    /*private forStatement(): void {
-        this.translate += this.preAnalysis.getValue() + ' a in range';
-        this.parser(Type.RESERVED_FOR);
-
-        this.translate += this.preAnalysis.getValue() + ' ';
-        this.parser(Type.SYMBOL_LEFT_PARENTHESIS);
-        this.initializer();
-        this.condition();
-        this.parser(Type.SYMBOL_SEMICOLON);
-        this.iteratorAssignment();
-        this.parser(Type.SYMBOL_RIGHT_PARENTHESIS);
-        this.body();
-    }*/
-
-    private parser(type: Type): void {
+    private nextToken(): void {
         if (this.preAnalysis.getTypeToken() != Type.EOF) {
             this.index++;
             this.preAnalysis = this.tokenList[this.index];
@@ -614,6 +543,9 @@ export class Translator {
     }
 
     public getTranslate(): string {
+        if (this.translate[0] == '\n') {
+            this.translate = this.translate.substring(1);
+        }
         return this.translate;
     }
 };
