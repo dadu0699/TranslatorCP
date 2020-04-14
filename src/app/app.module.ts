@@ -18,6 +18,7 @@ import { PythonEditorComponent } from './component/python-editor/python-editor.c
 import { HtmlEditorComponent } from './component/html-editor/html-editor.component';
 import { JsonEditorComponent } from './component/json-editor/json-editor.component';
 import { SymbolTableComponent } from './component/symbol-table/symbol-table.component';
+import { PaginatePipe } from './pipes/paginate.pipe';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { SymbolTableComponent } from './component/symbol-table/symbol-table.comp
     PythonEditorComponent,
     HtmlEditorComponent,
     JsonEditorComponent,
-    SymbolTableComponent
+    SymbolTableComponent,
+    PaginatePipe
   ],
   imports: [
     BrowserModule,
