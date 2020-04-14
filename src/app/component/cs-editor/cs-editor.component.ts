@@ -60,8 +60,11 @@ export class CsEditorComponent implements OnInit {
           report.generateErrorReport(this.syntacticAnalyzer.getErrorList());
         } else {
           this._snackBar.open('Syntactic analysis completed', 'close', { duration: 2000 });
-          let trans: Translator = new Translator(this.lexicalAnalyzer.getTokenList());
-          this._data.changePythonCode(trans.getTranslate());
+
+          this._data.changeSymbolTable(this.syntacticAnalyzer.getSymbolTable());
+
+          let translator: Translator = new Translator(this.lexicalAnalyzer.getTokenList());
+          this._data.changePythonCode(translator.getTranslate());
         }
 
       } else {

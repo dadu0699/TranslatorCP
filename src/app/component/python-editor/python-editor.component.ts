@@ -33,11 +33,6 @@ export class PythonEditorComponent implements OnInit {
     this._data.currentPython.subscribe(pythonCode => this.pythonCode = pythonCode);
   }
 
-  setEditorContentPython(event): void {
-    // console.log(event, typeof event);
-    console.log(this.pythonCode);
-  }
-
   saveDocument(): void {
     if (this.pythonCode) {
       let report: Report = new Report();

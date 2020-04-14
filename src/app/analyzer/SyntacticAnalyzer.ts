@@ -5,24 +5,30 @@ import { Symbol } from 'src/app/model/Symbol';
 
 export class SyntacticAnalyzer {
     private index: number;
-    private preAnalysis: Token;
-    private syntacticError: boolean;
-    private idError: number;
-    private errorList: Array<Error>;
-    private tokenList: Array<Token>;
-    private symbolTable: Array<Symbol>;
     private loopsCounter: number;
+    private preAnalysis: Token;
+    private tokenList: Array<Token>;
+
+    private idError: number;
+    private syntacticError: boolean;
+    private errorList: Array<Error>;
+
+    private typeSymbol: string;
+    private symbolTable: Array<Symbol>;
 
     constructor(tokenList: Array<Token>) {
         this.index = 0;
-        this.tokenList = tokenList;
-        this.tokenList.push(new Token(null, null, null, Type.EOF, null))
-        this.preAnalysis = this.tokenList[0];
-        this.syntacticError = false;
-        this.idError = 0;
-        this.errorList = [];
-        this.symbolTable = [];
         this.loopsCounter = 0;
+        this.tokenList = tokenList;
+        this.tokenList.push(new Token(null, null, null, Type.EOF, null));
+        this.preAnalysis = this.tokenList[0];
+
+        this.idError = 0;
+        this.syntacticError = false;
+        this.errorList = [];
+
+        this.typeSymbol = '';
+        this.symbolTable = [];
 
         this.start();
         console.log('Syntactic analysis completed');
@@ -240,12 +246,16 @@ export class SyntacticAnalyzer {
     }
 
     private declaration(): void {
+        this.typeSymbol = this.preAnalysis.getValue();
         this.type();
         this.idList();
         this.parser(Type.SYMBOL_SEMICOLON);
     }
 
     private idList(): void {
+        this.symbolTable.push(new Symbol(this.preAnalysis.getIDToken(),
+            this.typeSymbol, this.preAnalysis.getValue(),
+            null, this.preAnalysis.getRow()));
         this.parser(Type.ID);
         this.assignVariable();
         this.idListP();
@@ -558,7 +568,11 @@ export class SyntacticAnalyzer {
             || this.preAnalysis.getTypeToken() == Type.RESERVED_DOUBLE
             || this.preAnalysis.getTypeToken() == Type.RESERVED_BOOL
             || this.preAnalysis.getTypeToken() == Type.RESERVED_CHAR) {
+            this.typeSymbol = this.preAnalysis.getValue();
             this.type();
+            this.symbolTable.push(new Symbol(this.preAnalysis.getIDToken(),
+                this.typeSymbol, this.preAnalysis.getValue(),
+                null, this.preAnalysis.getRow()));
             this.assignment();
         } else if (this.preAnalysis.getTypeToken() == Type.ID) {
             this.assignment();
