@@ -234,9 +234,9 @@ export class Translator {
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_FOR) {
             this.forStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_WHILE) {
-            // this.whileStatement();
+            this.whileStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_DO) {
-            // this.doStatement();
+            this.doStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_RETURN) {
             // this.returnStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_BREAK) {
@@ -377,7 +377,7 @@ export class Translator {
     }
 
     private iterator(): void {
-        this.translate += this.preAnalysis.getValue();
+        this.translate += this.tokenList[this.index - 1].getValue() + ' ';
         if (this.preAnalysis.getTypeToken() == Type.SYMBOL_INCREMENT) {
             this.translate += '+= 1';
             this.nextToken(); // SYMBOL_INCREMENT
@@ -671,6 +671,41 @@ export class Translator {
             this.nextToken(); // SYMBOL_DECREMENT
         }
         this.translate += '):';
+    }
+
+    private whileStatement(): void {
+        this.translate += '\n';
+        this.addIndentation();
+        this.translate += this.preAnalysis.getValue() + ' ';
+        this.nextToken(); // RESERVED_WHILE
+        this.nextToken(); // SYMBOL_LEFT_PARENTHESIS
+        this.condition();
+        this.nextToken(); // SYMBOL_RIGHT_PARENTHESIS
+        this.translate += ':';
+        this.body();
+    }
+
+    private doStatement(): void {
+        this.nextToken() // RESERVED_DO
+        this.translate += '\n';
+        this.addIndentation();
+        this.translate += 'while True:';
+        this.body();
+        this.nextToken() // RESERVED_WHILE
+        this.nextToken() // SYMBOL_LEFT_PARENTHESIS
+        this.counterTabulations++;
+        this.translate += '\n';
+        this.addIndentation();
+        this.translate += 'if ';
+        this.condition();
+        this.translate += ':';
+        this.counterTabulations++;
+        this.translate += '\n';
+        this.addIndentation();
+        this.translate += 'break';
+        this.counterTabulations -= 2;
+        this.nextToken() // SYMBOL_RIGHT_PARENTHESIS
+        this.nextToken() // Type.SYMBOL_SEMICOLON
     }
 
     private nextToken(): void {
