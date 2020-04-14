@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+
+import { DataService } from 'src/app/service/data.service'
 import { Report } from 'src/app/util/Report';
 
 @Component({
@@ -9,9 +11,9 @@ import { Report } from 'src/app/util/Report';
 export class PythonEditorComponent implements OnInit {
   public name: string;
   public codeMirrorPythonOptions: any;
-  public dataPython;
+  public pythonCode;
 
-  constructor() {
+  constructor(private _data: DataService) {
     this.name = 'Python Properties';
     this.codeMirrorPythonOptions = {
       theme: 'dracula',
@@ -28,18 +30,18 @@ export class PythonEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dataPython = ("def my_function():\n\tprint(\"Hello from a function\")");
+    this._data.currentPython.subscribe(pythonCode => this.pythonCode = pythonCode);
   }
 
   setEditorContentPython(event): void {
     // console.log(event, typeof event);
-    console.log(this.dataPython);
+    console.log(this.pythonCode);
   }
 
   saveDocument(): void {
-    if (this.dataPython) {
+    if (this.pythonCode) {
       let report: Report = new Report();
-      report.writeContent(this.dataPython, 'translation.py', 'text/python');
+      report.writeContent(this.pythonCode, 'translation.py', 'text/python');
     }
   }
 }

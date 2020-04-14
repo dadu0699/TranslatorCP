@@ -6,6 +6,7 @@ import { SyntacticAnalyzer } from 'src/app/analyzer/SyntacticAnalyzer';
 import { Translator } from 'src/app/util/Translator';
 import { Token } from 'src/app/model/Token';
 import { Report } from 'src/app/util/Report';
+import { DataService } from 'src/app/service/data.service'
 
 @Component({
   selector: 'app-cs-editor',
@@ -13,14 +14,15 @@ import { Report } from 'src/app/util/Report';
   styleUrls: ['./cs-editor.component.css']
 })
 export class CsEditorComponent implements OnInit {
-  public name: string;
+  private name: string;
   public codeMirrorCSOptions: any;
-  public dataCS;
-  public lex: LexicalAnalyzer;
-  public synt: SyntacticAnalyzer;
+  public dataCS: string;
+  private lexicalAnalyzer: LexicalAnalyzer;
+  private syntacticAnalyzer: SyntacticAnalyzer;
   private tokenList: Array<Token>;
+  private pythonCode;
 
-  constructor(private _snackBar: MatSnackBar) {
+  constructor(private _snackBar: MatSnackBar, private _data: DataService) {
     this.name = 'CSharp Properties';
     this.codeMirrorCSOptions = {
       theme: 'dracula',
@@ -42,29 +44,29 @@ export class CsEditorComponent implements OnInit {
 
   analyze(): void {
     if (this.dataCS) {
-      this.lex = new LexicalAnalyzer();
-      this.lex.scanner(this.dataCS);
-      this.tokenList = this.lex.getTokenList();
+      this.lexicalAnalyzer = new LexicalAnalyzer();
+      this.lexicalAnalyzer.scanner(this.dataCS);
+      this.tokenList = this.lexicalAnalyzer.getTokenList();
 
       let report: Report = new Report();
       this._snackBar.open('Lexical analysis completed', 'close', { duration: 2000 });
       // report.generateTokenReport(this.tokenList);
 
-      if (this.lex.getErrorList().length == 0) {
-        this.synt = new SyntacticAnalyzer(this.tokenList);
+      if (this.lexicalAnalyzer.getErrorList().length == 0) {
+        this.syntacticAnalyzer = new SyntacticAnalyzer(this.tokenList);
 
-        if (this.synt.getErrorList().length > 0) {
+        if (this.syntacticAnalyzer.getErrorList().length > 0) {
           this._snackBar.open('Syntactic errors', 'close', { duration: 2000 });
-          report.generateErrorReport(this.synt.getErrorList());
+          report.generateErrorReport(this.syntacticAnalyzer.getErrorList());
         } else {
           this._snackBar.open('Syntactic analysis completed', 'close', { duration: 2000 });
-          let trans: Translator = new Translator(this.lex.getTokenList());
-          report.writeContent(trans.getTranslate(), 'translation.py', 'text/python');
+          let trans: Translator = new Translator(this.lexicalAnalyzer.getTokenList());
+          this._data.changePythonCode(trans.getTranslate());
         }
 
       } else {
         this._snackBar.open('Lexical errors', 'close', { duration: 2000 });
-        report.generateErrorReport(this.lex.getErrorList());
+        report.generateErrorReport(this.lexicalAnalyzer.getErrorList());
       }
     }
   }
