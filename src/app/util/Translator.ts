@@ -391,7 +391,14 @@ export class Translator {
         this.translate += '\n';
         this.addIndentation();
         this.nextToken(); // ID
-        this.assignVariable();
+        if (this.preAnalysis.getTypeToken() == Type.SYMBOL_EQUALS ||
+            this.preAnalysis.getTypeToken() == Type.SYMBOL_INCREMENT
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_DECREMENT) {
+            this.assignVariable();
+        } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_LEFT_PARENTHESIS) {
+            this.translate += this.tokenList[this.index - 1].getValue();
+            this.invokeMethod();
+        }
         this.nextToken(); // SYMBOL_SEMICOLON
     }
 
@@ -633,7 +640,7 @@ export class Translator {
             || this.preAnalysis.getTypeToken() == Type.RESERVED_CHAR) {
             this.type();
         }
-        this.translate += ' ' + this.preAnalysis.getValue() + ' in  range (';
+        this.translate += ' ' + this.preAnalysis.getValue() + ' in range (';
 
         this.nextToken(); // ID
         this.nextToken(); // SYMBOL_EQUALS

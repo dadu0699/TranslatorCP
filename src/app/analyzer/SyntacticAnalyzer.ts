@@ -1,6 +1,7 @@
 import { Token } from 'src/app/model/Token';
 import { Type } from 'src/app/model/Token';
 import { Error } from 'src/app/model/Error';
+import { Symbol } from 'src/app/model/Symbol';
 
 export class SyntacticAnalyzer {
     private index: number;
@@ -9,6 +10,7 @@ export class SyntacticAnalyzer {
     private idError: number;
     private errorList: Array<Error>;
     private tokenList: Array<Token>;
+    private symbolTable: Array<Symbol>;
     private loopsCounter: number;
 
     constructor(tokenList: Array<Token>) {
@@ -19,6 +21,7 @@ export class SyntacticAnalyzer {
         this.syntacticError = false;
         this.idError = 0;
         this.errorList = [];
+        this.symbolTable = [];
         this.loopsCounter = 0;
 
         this.start();
@@ -360,8 +363,17 @@ export class SyntacticAnalyzer {
 
     private assignment(): void {
         this.parser(Type.ID);
-        this.assignVariable();
-        this.parser(Type.SYMBOL_SEMICOLON);
+        if (this.preAnalysis.getTypeToken() == Type.SYMBOL_EQUALS ||
+            this.preAnalysis.getTypeToken() == Type.SYMBOL_INCREMENT
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_DECREMENT) {
+            this.assignVariable();
+            this.parser(Type.SYMBOL_SEMICOLON);
+        } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_LEFT_PARENTHESIS) {
+            this.invokeMethod();
+            this.parser(Type.SYMBOL_SEMICOLON);
+        } else {
+            this.addError('Was expected \'= | ++ | -- | ()\'');
+        }
     }
 
     private printStatement(): void {
@@ -653,5 +665,9 @@ export class SyntacticAnalyzer {
 
     public getErrorList(): Array<Error> {
         return this.errorList;
+    }
+
+    public getSymbolTable(): Array<Symbol> {
+        return this.symbolTable;
     }
 };
