@@ -9,15 +9,17 @@ export class SyntacticAnalyzer {
     private idError: number;
     private errorList: Array<Error>;
     private tokenList: Array<Token>;
+    private loopsCounter: number;
 
     constructor(tokenList: Array<Token>) {
+        this.index = 0;
         this.tokenList = tokenList;
         this.tokenList.push(new Token(null, null, null, Type.EOF, null))
-        this.index = 0;
         this.preAnalysis = this.tokenList[0];
         this.syntacticError = false;
         this.idError = 0;
         this.errorList = [];
+        this.loopsCounter = 0;
 
         this.start();
         console.log('Syntactic analysis completed');
@@ -197,19 +199,37 @@ export class SyntacticAnalyzer {
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_IF) {
             this.ifStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_SWITCH) {
+            this.loopsCounter++;
             this.switchStatement();
+            this.loopsCounter--;
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_FOR) {
+            this.loopsCounter++;
             this.forStatement();
+            this.loopsCounter--;
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_WHILE) {
+            this.loopsCounter++;
             this.whileStatement();
+            this.loopsCounter--;
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_DO) {
+            this.loopsCounter++;
             this.doStatement();
+            this.loopsCounter--;
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_RETURN) {
             this.returnStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_BREAK) {
-            this.breakStatement();
+            if (this.loopsCounter > 0) {
+                this.breakStatement();
+            } else {
+                this.addError('No enclosing loop out of which to break or continue');
+                this.parser(Type.RESERVED_BREAK);
+            }
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_CONTINUE) {
-            this.continueStatement();
+            if (this.loopsCounter > 0) {
+                this.continueStatement();
+            } else {
+                this.addError('No enclosing loop out of which to break or continue');
+                this.parser(Type.RESERVED_CONTINUE);
+            }
         } else if (this.preAnalysis.getTypeToken() == Type.COMMENT
             || this.preAnalysis.getTypeToken() == Type.MULTILINE_COMMENT) {
             this.commentary();
