@@ -526,7 +526,8 @@ export class SyntacticAnalyzer {
             || this.preAnalysis.getTypeToken() == Type.RESERVED_DOUBLE
             || this.preAnalysis.getTypeToken() == Type.RESERVED_BOOL
             || this.preAnalysis.getTypeToken() == Type.RESERVED_CHAR) {
-            this.declaration();
+            this.type();
+            this.assignment();
         } else if (this.preAnalysis.getTypeToken() == Type.ID) {
             this.assignment();
         } else {

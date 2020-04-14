@@ -154,7 +154,13 @@ export class Translator {
             || this.preAnalysis.getTypeToken() == Type.RESERVED_DOUBLE
             || this.preAnalysis.getTypeToken() == Type.RESERVED_BOOL
             || this.preAnalysis.getTypeToken() == Type.RESERVED_CHAR) {
-            this.nextToken(); // RESERVED_INT RESERVED_STRING RESERVED_DOUBLE RESERVED_BOOL RESERVED_CHAR
+            this.nextToken();
+            /*  RESERVED_INT
+                RESERVED_STRING
+                RESERVED_DOUBLE
+                RESERVED_BOOL
+                RESERVED_CHAR
+            */
         }
     }
 
@@ -226,7 +232,7 @@ export class Translator {
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_SWITCH) {
             this.switchStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_FOR) {
-            // this.forStatement();
+            this.forStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_WHILE) {
             // this.whileStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_DO) {
@@ -601,6 +607,70 @@ export class Translator {
             this.translate += ',';
             this.counterTabulations--;
         }
+    }
+
+    private forStatement(): void {
+        this.translate += '\n';
+        this.addIndentation();
+        this.translate += this.preAnalysis.getValue();
+        this.nextToken(); // RESERVED_FOR
+        this.nextToken(); // SYMBOL_LEFT_PARENTHESIS
+        this.initializerCondition();
+        this.iteratorAssignment();
+        this.nextToken(); //SYMBOL_RIGHT_PARENTHESIS
+        this.body();
+    }
+
+    private initializerCondition(): void {
+        let eval1: string = '';
+        let eval2: string = '';
+        let operator: Token;
+
+        if (this.preAnalysis.getTypeToken() == Type.RESERVED_INT
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_STRING
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_DOUBLE
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_BOOL
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_CHAR) {
+            this.type();
+        }
+        this.translate += ' ' + this.preAnalysis.getValue() + ' in  range (';
+
+        this.nextToken(); // ID
+        this.nextToken(); // SYMBOL_EQUALS
+        while (this.preAnalysis.getTypeToken() != Type.SYMBOL_SEMICOLON) {
+            eval1 += this.preAnalysis.getValue(); // EXPRESSION
+            this.nextToken();
+        }
+        this.nextToken(); // SYMBOL_SEMICOLON
+
+        this.nextToken(); // ID
+        operator = this.preAnalysis;
+        this.nextToken(); // OPERATOR
+        while (this.preAnalysis.getTypeToken() != Type.SYMBOL_SEMICOLON) {
+            eval2 += this.preAnalysis.getValue(); // EXPRESSION
+            this.nextToken();
+        }
+        this.nextToken(); // SYMBOL_SEMICOLON
+
+        if (operator.getTypeToken() == Type.SYMBOL_LESS_THAN_OETS) {
+            eval2 = (Number(eval2) + 1).toString();
+        } else if (operator.getTypeToken() == Type.SYMBOL_GREATER_THAN_OETS) {
+            eval1 = (Number(eval1) + 1).toString();
+        }
+
+        this.translate += eval1 + ', ' + eval2 + ', ';
+    }
+
+    private iteratorAssignment(): void {
+        this.nextToken(); // ID
+        if (this.preAnalysis.getTypeToken() == Type.SYMBOL_INCREMENT) {
+            this.translate += '1';
+            this.nextToken(); // SYMBOL_INCREMENT
+        } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_DECREMENT) {
+            this.translate += '-1';
+            this.nextToken(); // SYMBOL_DECREMENT
+        }
+        this.translate += '):';
     }
 
     private nextToken(): void {
