@@ -9,7 +9,8 @@ export class Translator {
     private counterTabulations: number;
 
     constructor(tokenList: Array<Token>) {
-        this.tokenList = tokenList;
+        this.tokenList = [];
+        this.cloneTokenList(tokenList);
         this.tokenList.push(new Token(null, null, null, Type.EOF, null))
         this.index = 0;
         this.translate = '';
@@ -17,6 +18,12 @@ export class Translator {
         this.counterTabulations = 0;
 
         this.start();
+    }
+
+    private cloneTokenList(tokenList: Array<Token>) {
+        tokenList.forEach(element => {
+            this.tokenList.push(element);
+        });
     }
 
     private start(): void {

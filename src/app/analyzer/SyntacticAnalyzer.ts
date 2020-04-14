@@ -19,7 +19,8 @@ export class SyntacticAnalyzer {
     constructor(tokenList: Array<Token>) {
         this.index = 0;
         this.loopsCounter = 0;
-        this.tokenList = tokenList;
+        this.tokenList = [];
+        this.cloneTokenList(tokenList);
         this.tokenList.push(new Token(null, null, null, Type.EOF, null));
         this.preAnalysis = this.tokenList[0];
 
@@ -32,6 +33,12 @@ export class SyntacticAnalyzer {
 
         this.start();
         console.log('Syntactic analysis completed');
+    }
+
+    private cloneTokenList(tokenList: Array<Token>) {
+        tokenList.forEach(element => {
+            this.tokenList.push(element);
+        });
     }
 
     private start(): void {

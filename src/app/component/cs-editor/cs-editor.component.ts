@@ -5,6 +5,7 @@ import { LexicalAnalyzer } from 'src/app/analyzer/LexicalAnalyzer';
 import { SyntacticAnalyzer } from 'src/app/analyzer/SyntacticAnalyzer';
 import { Translator } from 'src/app/util/Translator';
 import { Token } from 'src/app/model/Token';
+import { Error } from 'src/app/model/Error';
 import { Report } from 'src/app/util/Report';
 import { DataService } from 'src/app/service/data.service'
 
@@ -17,9 +18,12 @@ export class CsEditorComponent implements OnInit {
   private name: string;
   public codeMirrorCSOptions: any;
   public dataCS: string;
+
   private lexicalAnalyzer: LexicalAnalyzer;
   private syntacticAnalyzer: SyntacticAnalyzer;
   private tokenList: Array<Token>;
+  private errorList: Array<Error>;
+
   private pythonCode;
 
   constructor(private _snackBar: MatSnackBar, private _data: DataService) {
@@ -37,6 +41,7 @@ export class CsEditorComponent implements OnInit {
     };
 
     this.tokenList = [];
+    this.errorList = [];
   }
 
   ngOnInit(): void {
@@ -47,17 +52,15 @@ export class CsEditorComponent implements OnInit {
       this.lexicalAnalyzer = new LexicalAnalyzer();
       this.lexicalAnalyzer.scanner(this.dataCS);
       this.tokenList = this.lexicalAnalyzer.getTokenList();
+      this.errorList = this.lexicalAnalyzer.getErrorList();
 
-      let report: Report = new Report();
       this._snackBar.open('Lexical analysis completed', 'close', { duration: 2000 });
-      // report.generateTokenReport(this.tokenList);
-
       if (this.lexicalAnalyzer.getErrorList().length == 0) {
         this.syntacticAnalyzer = new SyntacticAnalyzer(this.tokenList);
 
         if (this.syntacticAnalyzer.getErrorList().length > 0) {
           this._snackBar.open('Syntactic errors', 'close', { duration: 2000 });
-          report.generateErrorReport(this.syntacticAnalyzer.getErrorList());
+          this.errorList = this.syntacticAnalyzer.getErrorList();
         } else {
           this._snackBar.open('Syntactic analysis completed', 'close', { duration: 2000 });
 
@@ -69,8 +72,21 @@ export class CsEditorComponent implements OnInit {
 
       } else {
         this._snackBar.open('Lexical errors', 'close', { duration: 2000 });
-        report.generateErrorReport(this.lexicalAnalyzer.getErrorList());
       }
+    }
+  }
+
+  tokensReport(): void {
+    if (this.tokenList.length > 0) {
+      let report: Report = new Report();
+      report.generateTokenReport(this.tokenList);
+    }
+  }
+
+  errorsReport(): void {
+    if (this.errorList.length > 0) {
+      let report: Report = new Report();
+      report.generateErrorReport(this.errorList);
     }
   }
 }
