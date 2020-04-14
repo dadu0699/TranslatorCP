@@ -432,7 +432,7 @@ export class Translator {
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_LESS_THAN
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN_OETS
-            || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN_OETS
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_LESS_THAN_OETS
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_COMPARISON
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_INEQUALITY
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_AND

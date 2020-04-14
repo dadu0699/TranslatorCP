@@ -27,7 +27,7 @@ export class SymbolTableComponent implements OnInit {
   ngOnInit(): void {
     this._data.currentSymbolTable.subscribe(
       symbolTable =>
-        this.dataSource = symbolTable
+        this.dataSource = symbolTable,
     );
   }
 
