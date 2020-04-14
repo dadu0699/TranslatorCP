@@ -238,11 +238,11 @@ export class Translator {
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_DO) {
             this.doStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_RETURN) {
-            // this.returnStatement();
+            this.returnStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_BREAK) {
-            // this.breakStatement();
+            this.breakStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.RESERVED_CONTINUE) {
-            // this.continueStatement();
+            this.continueStatement();
         } else if (this.preAnalysis.getTypeToken() == Type.COMMENT
             || this.preAnalysis.getTypeToken() == Type.MULTILINE_COMMENT) {
             this.commentary();
@@ -706,6 +706,54 @@ export class Translator {
         this.counterTabulations -= 2;
         this.nextToken() // SYMBOL_RIGHT_PARENTHESIS
         this.nextToken() // Type.SYMBOL_SEMICOLON
+    }
+
+    private returnStatement(): void {
+        this.translate += '\n';
+        this.addIndentation();
+        this.translate += this.preAnalysis.getValue() + ' ';
+        this.nextToken() // RESERVED_RETURN
+        this.returnStatementP();
+        this.nextToken() // SYMBOL_SEMICOLON
+    }
+
+    private returnStatementP(): void {
+        if (this.preAnalysis.getTypeToken() == Type.SYMBOL_LEFT_PARENTHESIS
+            || this.preAnalysis.getTypeToken() == Type.DIGIT
+            || this.preAnalysis.getTypeToken() == Type.DECIMAL
+            || this.preAnalysis.getTypeToken() == Type.ID
+            || this.preAnalysis.getTypeToken() == Type.STR
+            || this.preAnalysis.getTypeToken() == Type.CHARACTER
+            || this.preAnalysis.getTypeToken() == Type.HTML
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_TRUE
+            || this.preAnalysis.getTypeToken() == Type.RESERVED_FALSE
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_LESS_THAN
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN_OETS
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN_OETS
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_COMPARISON
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_INEQUALITY
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_AND
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_OR
+            || this.preAnalysis.getTypeToken() == Type.SYMBOL_NOT) {
+            this.condition();
+        }
+    }
+
+    private breakStatement(): void {
+        this.translate += '\n';
+        this.addIndentation();
+        this.translate += this.preAnalysis.getValue();
+        this.nextToken() // RESERVED_BREAK
+        this.nextToken() // SYMBOL_SEMICOLON
+    }
+
+    private continueStatement(): void {
+        this.translate += '\n';
+        this.addIndentation();
+        this.translate += this.preAnalysis.getValue();
+        this.nextToken() // RESERVED_CONTINUE
+        this.nextToken() // SYMBOL_SEMICOLON
     }
 
     private nextToken(): void {
