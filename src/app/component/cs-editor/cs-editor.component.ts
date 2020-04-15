@@ -75,9 +75,11 @@ export class CsEditorComponent implements OnInit {
           htmlA.scanner(this.syntacticAnalyzer.getHTMLContent());
 
           if (htmlA.getErrorList().length == 0) {
-            let prettierHTML: PrettierHTML = new PrettierHTML(htmlA.getTokenList());
-            this._data.changeHTMLCode(prettierHTML.getHTMLContent());
-            this._data.changeJSONCode(prettierHTML.getTranslate());
+            if (htmlA.getTokenList().length > 0) {
+              let prettierHTML: PrettierHTML = new PrettierHTML(htmlA.getTokenList());
+              this._data.changeHTMLCode(prettierHTML.getHTMLContent());
+              this._data.changeJSONCode(prettierHTML.getTranslate());
+            }
           } else {
             this.errorList = htmlA.getErrorList();
             this._snackBar.open('Errors in html input', 'close', { duration: 2000 });
