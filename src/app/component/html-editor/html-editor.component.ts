@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+
+import { DataService } from 'src/app/service/data.service'
 import { Report } from 'src/app/util/Report';
 
 @Component({
@@ -9,9 +11,9 @@ import { Report } from 'src/app/util/Report';
 export class HtmlEditorComponent implements OnInit {
   public name: string;
   public codeMirrorHTMLOptions: any;
-  public dataHTML;
+  public htmlCode;
 
-  constructor() {
+  constructor(private _data: DataService) {
     this.name = 'HTML Properties';
     this.codeMirrorHTMLOptions = {
       theme: 'dracula',
@@ -28,20 +30,36 @@ export class HtmlEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dataHTML = ("<html>\n\t<head>\n\t\t<meta charset =\"UTF-8\">"
-      + "\n\t\t<title>Page Title</title>\n\t</head>\n\t<body>\n\t\t"
-      + "<h1>This is a Heading</h1>\n\t\t<p>This is a paragraph.</p>\n\t</body>\n</html>");
-  }
-
-  setEditorContentHTML(event): void {
-    // console.log(event, typeof event);
-    console.log(this.dataHTML);
+    this._data.currentHTML.subscribe(htmlCode => this.htmlCode = htmlCode);
   }
 
   saveDocument(): void {
-    if (this.dataHTML) {
+    if (this.htmlCode) {
       let report: Report = new Report();
-      report.writeContent(this.dataHTML, 'translation.html', 'text/html');
+      report.writeContent(this.htmlCode, 'translation.html', 'text/html');
+    }
+  }
+
+  prettierHTML(htmlContent: string): void {
+    let tabulations: number = 0;
+    this.htmlCode = '';
+
+    for (let i = 0; i < htmlContent.length; i++) {
+      if (htmlContent[i] == '<') {
+        if (i < htmlContent.length && htmlContent[i + 1] == '/') {
+          tabulations--;
+        } else {
+          tabulations++;
+        }
+
+        for (let j = 0; j < tabulations; j++) {
+          this.htmlCode += '\t';
+        }
+      }
+      this.htmlCode += htmlContent[i];
+      if (htmlContent[i] == '>') {
+        this.htmlCode += '\n';
+      }
     }
   }
 }

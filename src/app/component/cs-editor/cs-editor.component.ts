@@ -24,8 +24,6 @@ export class CsEditorComponent implements OnInit {
   private tokenList: Array<Token>;
   private errorList: Array<Error>;
 
-  private pythonCode;
-
   constructor(private _snackBar: MatSnackBar, private _data: DataService) {
     this.name = 'CSharp Properties';
     this.codeMirrorCSOptions = {
@@ -65,6 +63,7 @@ export class CsEditorComponent implements OnInit {
           this._snackBar.open('Syntactic analysis completed', 'close', { duration: 2000 });
 
           this._data.changeSymbolTable(this.syntacticAnalyzer.getSymbolTable());
+          this._data.changeHTMLCode(this.syntacticAnalyzer.getHTMLContent());
 
           let translator: Translator = new Translator(this.lexicalAnalyzer.getTokenList());
           this._data.changePythonCode(translator.getTranslate());

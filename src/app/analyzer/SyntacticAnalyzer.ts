@@ -16,6 +16,8 @@ export class SyntacticAnalyzer {
     private typeSymbol: string;
     private symbolTable: Array<Symbol>;
 
+    private htmlContent: string;
+
     constructor(tokenList: Array<Token>) {
         this.index = 0;
         this.loopsCounter = 0;
@@ -30,6 +32,8 @@ export class SyntacticAnalyzer {
 
         this.typeSymbol = '';
         this.symbolTable = [];
+
+        this.htmlContent = '';
 
         this.start();
         console.log('Syntactic analysis completed');
@@ -410,7 +414,8 @@ export class SyntacticAnalyzer {
             || this.preAnalysis.getTypeToken() == Type.ID
             || this.preAnalysis.getTypeToken() == Type.STR
             || this.preAnalysis.getTypeToken() == Type.CHARACTER
-            || this.preAnalysis.getTypeToken() == Type.HTML
+            || (this.preAnalysis.getTypeToken() == Type.HTML
+                && this.tokenList[this.index + 1].getTypeToken() != Type.SYMBOL_RIGHT_PARENTHESIS)
             || this.preAnalysis.getTypeToken() == Type.RESERVED_TRUE
             || this.preAnalysis.getTypeToken() == Type.RESERVED_FALSE
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_GREATER_THAN
@@ -424,6 +429,8 @@ export class SyntacticAnalyzer {
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_NOT) {
             this.condition();
         } else if (this.preAnalysis.getTypeToken() == Type.HTML) {
+            this.htmlContent += this.preAnalysis.getValue().substring(1,
+                this.preAnalysis.getValue().length - 1);
             this.parser(Type.HTML);
         } else {
             this.addError('Was expected \'EXPRESSION | HTML\'');
@@ -690,5 +697,9 @@ export class SyntacticAnalyzer {
 
     public getSymbolTable(): Array<Symbol> {
         return this.symbolTable;
+    }
+
+    public getHTMLContent(): string {
+        return this.htmlContent;
     }
 };
