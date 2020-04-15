@@ -3,7 +3,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { LexicalAnalyzer } from 'src/app/analyzer/LexicalAnalyzer';
 import { SyntacticAnalyzer } from 'src/app/analyzer/SyntacticAnalyzer';
+import { HTMLAnalyzer } from 'src/app/analyzer/HTMLAnalyzer';
 import { Translator } from 'src/app/util/Translator';
+import { PrettierHTML } from 'src/app/util/PrettierHTML';
 import { Token } from 'src/app/model/Token';
 import { Error } from 'src/app/model/Error';
 import { Report } from 'src/app/util/Report';
@@ -46,6 +48,12 @@ export class CsEditorComponent implements OnInit {
   }
 
   analyze(): void {
+    this._data.changeSymbolTable([]);
+    this._data.changeHTMLCode('');
+    this._data.changePythonCode('');
+    this._data.changeJSONCode('');
+
+
     if (this.dataCS) {
       this.lexicalAnalyzer = new LexicalAnalyzer();
       this.lexicalAnalyzer.scanner(this.dataCS);
@@ -61,9 +69,19 @@ export class CsEditorComponent implements OnInit {
           this.errorList = this.syntacticAnalyzer.getErrorList();
         } else {
           this._snackBar.open('Syntactic analysis completed', 'close', { duration: 2000 });
-
           this._data.changeSymbolTable(this.syntacticAnalyzer.getSymbolTable());
-          this._data.changeHTMLCode(this.syntacticAnalyzer.getHTMLContent());
+
+          let htmlA: HTMLAnalyzer = new HTMLAnalyzer();
+          htmlA.scanner(this.syntacticAnalyzer.getHTMLContent());
+
+          if (htmlA.getErrorList().length == 0) {
+            let prettierHTML: PrettierHTML = new PrettierHTML(htmlA.getTokenList());
+            this._data.changeHTMLCode(prettierHTML.getHTMLContent());
+            this._data.changeJSONCode(prettierHTML.getTranslate());
+          } else {
+            this.errorList = htmlA.getErrorList();
+            this._snackBar.open('Errors in html input', 'close', { duration: 2000 });
+          }
 
           let translator: Translator = new Translator(this.lexicalAnalyzer.getTokenList());
           this._data.changePythonCode(translator.getTranslate());

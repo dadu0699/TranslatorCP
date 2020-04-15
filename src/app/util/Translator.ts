@@ -11,7 +11,7 @@ export class Translator {
     constructor(tokenList: Array<Token>) {
         this.tokenList = [];
         this.cloneTokenList(tokenList);
-        this.tokenList.push(new Token(null, null, null, Type.EOF, null))
+        this.tokenList.push(new Token(null, null, null, Type.EOF, null));
         this.index = 0;
         this.translate = '';
         this.preAnalysis = this.tokenList[0];
@@ -451,7 +451,6 @@ export class Translator {
 
             while (this.tokenList[this.index + 1].getTypeToken() != Type.SYMBOL_SEMICOLON) {
                 expression += this.preAnalysis.getValue();
-                console.log(expression);
                 this.nextToken();
             }
 
@@ -803,7 +802,7 @@ export class Translator {
     private addIndentation(): void {
         for (let i = 0; i < this.counterTabulations; i++) {
             for (let j = 0; j < 4; j++) {
-                this.translate += " ";
+                this.translate += ' ';
             }
         }
     }

@@ -16,6 +16,9 @@ export class DataService {
   private htmlCode;
   public currentHTML;
 
+  private jsonCode;
+  public currentJSON;
+
   constructor() {
     this.pythonCode = new BehaviorSubject('');
     this.currentPython = this.pythonCode.asObservable();
@@ -25,6 +28,9 @@ export class DataService {
 
     this.htmlCode = new BehaviorSubject('');
     this.currentHTML = this.htmlCode.asObservable();
+
+    this.jsonCode = new BehaviorSubject('');
+    this.currentJSON = this.jsonCode.asObservable();
   }
 
   public changePythonCode(python: string): void {
@@ -37,5 +43,9 @@ export class DataService {
 
   public changeHTMLCode(htmlCode: string): void {
     this.htmlCode.next(htmlCode);
+  }
+
+  public changeJSONCode(jsonCode: string): void {
+    this.jsonCode.next(jsonCode);
   }
 }

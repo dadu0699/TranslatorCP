@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+
+import { DataService } from 'src/app/service/data.service'
 import { Report } from 'src/app/util/Report';
 
 @Component({
@@ -9,9 +11,9 @@ import { Report } from 'src/app/util/Report';
 export class JsonEditorComponent implements OnInit {
   public name: string;
   public codeMirrorJSONOptions: any;
-  public dataJSON;
+  public jsonCode;
 
-  constructor() {
+  constructor(private _data: DataService) {
     this.name = 'JSON Properties';
     this.codeMirrorJSONOptions = {
       theme: 'dracula',
@@ -28,29 +30,13 @@ export class JsonEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dataJSON = JSON.stringify({
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "title": "Object",
-      "additionalProperties": false,
-      "properties": {
-        "string": {
-          "type": "string",
-          "title": "String"
-        }
-      }
-    }, null, ' ');
-  }
-
-  setEditorContentJSON(event): void {
-    // console.log(event, typeof event);
-    console.log(this.dataJSON);
+    this._data.currentJSON.subscribe(jsonCode => this.jsonCode = jsonCode);
   }
 
   saveDocument(): void {
-    if (this.dataJSON) {
+    if (this.jsonCode) {
       let report: Report = new Report();
-      report.writeContent(this.dataJSON, 'translation.json', 'text/json');
+      report.writeContent(this.jsonCode, 'translation.json', 'text/json');
     }
   }
 }

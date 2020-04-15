@@ -39,27 +39,4 @@ export class HtmlEditorComponent implements OnInit {
       report.writeContent(this.htmlCode, 'translation.html', 'text/html');
     }
   }
-
-  prettierHTML(htmlContent: string): void {
-    let tabulations: number = 0;
-    this.htmlCode = '';
-
-    for (let i = 0; i < htmlContent.length; i++) {
-      if (htmlContent[i] == '<') {
-        if (i < htmlContent.length && htmlContent[i + 1] == '/') {
-          tabulations--;
-        } else {
-          tabulations++;
-        }
-
-        for (let j = 0; j < tabulations; j++) {
-          this.htmlCode += '\t';
-        }
-      }
-      this.htmlCode += htmlContent[i];
-      if (htmlContent[i] == '>') {
-        this.htmlCode += '\n';
-      }
-    }
-  }
 }
