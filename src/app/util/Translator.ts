@@ -427,6 +427,9 @@ export class Translator {
     }
 
     private printValue(): void {
+        let expression: string = '';
+        let auxContent: string = '';
+
         if (this.preAnalysis.getTypeToken() == Type.SYMBOL_LEFT_PARENTHESIS
             || this.preAnalysis.getTypeToken() == Type.DIGIT
             || this.preAnalysis.getTypeToken() == Type.DECIMAL
@@ -445,10 +448,30 @@ export class Translator {
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_AND
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_OR
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_NOT) {
-            this.condition();
-        } else if (this.preAnalysis.getTypeToken() == Type.HTML) {
-            this.translate += this.preAnalysis.getValue();
-            this.nextToken(); // HTML
+
+            while (this.tokenList[this.index + 1].getTypeToken() != Type.SYMBOL_SEMICOLON) {
+                expression += this.preAnalysis.getValue();
+                console.log(expression);
+                this.nextToken();
+            }
+
+            expression = expression.replace('&&', ' and ').replace('||', ' or ');
+            for (let i = 0; i < expression.length; i++) {
+                if ((i + 1) < expression.length) {
+                    if (expression[i] == '+'
+                        && (this.isLetter(expression[i - 1]) || expression[i - 1] == '"')
+                        && (this.isLetter(expression[i + 1]) || expression[i + 1] == '"')) {
+                        auxContent = expression.substring(0, i) + ', '
+                            + expression.substring(i + 1, expression.length);
+                        expression = auxContent;
+                    } else if (expression[i] == '!' && this.isLetter(expression[i + 1])) {
+                        auxContent = expression.substring(0, i) + ' not '
+                            + expression.substring(i + 1, expression.length);
+                        expression = auxContent;
+                    }
+                }
+            }
+            this.translate += expression;
         }
     }
 
@@ -777,12 +800,21 @@ export class Translator {
         }
     }
 
-    public addIndentation(): void {
+    private addIndentation(): void {
         for (let i = 0; i < this.counterTabulations; i++) {
             for (let j = 0; j < 4; j++) {
                 this.translate += " ";
             }
         }
+    }
+
+    private isLetter(character: string): boolean {
+        let code: number = character.codePointAt(0);
+        if ((code >= 65 && code <= 90)
+            || (code >= 97 && code <= 122)) {
+            return true;
+        }
+        return false;
     }
 
     public getTranslate(): string {
