@@ -127,7 +127,6 @@ export class CsEditorComponent implements OnInit {
     fileReader.readAsText(this.file);
   }
 
-
   saveDocument(): void {
     if (this.dataCS) {
       let report: Report = new Report();

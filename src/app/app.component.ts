@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
   }
 
   addTab() {
-    this.tabs.push('New');
+    this.tabs.push('NEW');
     this.selected.setValue(this.tabs.length - 1);
   }
 

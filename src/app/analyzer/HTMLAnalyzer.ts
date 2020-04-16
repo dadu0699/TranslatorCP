@@ -4,7 +4,6 @@ import { Error } from 'src/app/model/Error';
 
 export class HTMLAnalyzer {
     private auxiliary: string;
-    private auxiliaryWord: string;
     private state: number;
     private idToken: number;
     private idError: number;
