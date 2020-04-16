@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { LexicalAnalyzer } from 'src/app/analyzer/LexicalAnalyzer';
@@ -27,6 +27,8 @@ export class CsEditorComponent implements OnInit {
   private errorList: Array<Error>;
 
   private file: File;
+
+  @Output() newTab = new EventEmitter();
 
   constructor(private _snackBar: MatSnackBar, private _data: DataService) {
     this.name = 'CSharp Properties';

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-import { DataService } from 'src/app/service/data.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -9,11 +8,20 @@ import { DataService } from 'src/app/service/data.service';
 })
 export class AppComponent implements OnInit {
   title = 'TranslatorCP';
-  pythonCode: string;
+  tabs = ['CSHARP'];
+  selected = new FormControl(0);
 
-  constructor(private _data: DataService) { }
+  constructor() { }
 
   ngOnInit() {
-    this._data.currentPython.subscribe(pythonCode => this.pythonCode = pythonCode);
+  }
+
+  addTab() {
+    this.tabs.push('New');
+    this.selected.setValue(this.tabs.length - 1);
+  }
+
+  removeTab(index: number) {
+    this.tabs.splice(index, 1);
   }
 }
