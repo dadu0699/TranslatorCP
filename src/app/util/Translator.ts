@@ -119,7 +119,8 @@ export class Translator {
             this.preAnalysis = this.tokenList[this.index];
             this.declaration();
         } else {
-            let rMain: boolean = (this.tokenList[this.index - 1].getValue() == 'main');
+            let rMain: boolean = (this.tokenList[this.index - 1].getValue()
+                .toLowerCase() == 'main');
 
             this.translate += '\n';
             this.addIndentation();
@@ -460,7 +461,7 @@ export class Translator {
                     if (expression[i] == '+'
                         && (this.isLetter(expression[i - 1]) || expression[i - 1] == '"')
                         && (this.isLetter(expression[i + 1]) || expression[i + 1] == '"')) {
-                        auxContent = expression.substring(0, i) + ', '
+                        auxContent = expression.substring(0, i) + ','
                             + expression.substring(i + 1, expression.length);
                         expression = auxContent;
                     } else if (expression[i] == '!' && this.isLetter(expression[i + 1])) {

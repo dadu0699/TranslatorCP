@@ -26,6 +26,8 @@ export class CsEditorComponent implements OnInit {
   private tokenList: Array<Token>;
   private errorList: Array<Error>;
 
+  private file: File;
+
   constructor(private _snackBar: MatSnackBar, private _data: DataService) {
     this.name = 'CSharp Properties';
     this.codeMirrorCSOptions = {
@@ -106,6 +108,28 @@ export class CsEditorComponent implements OnInit {
     if (this.errorList.length > 0) {
       let report: Report = new Report();
       report.generateErrorReport(this.errorList);
+    }
+  }
+
+  fileChanged(e: any): void {
+    this.file = e.target.files[0];
+    this.uploadDocument();
+  }
+
+  uploadDocument(): void {
+    let fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      // console.log(fileReader.result);
+      this.dataCS = fileReader.result.toString();
+    }
+    fileReader.readAsText(this.file);
+  }
+
+
+  saveDocument(): void {
+    if (this.dataCS) {
+      let report: Report = new Report();
+      report.writeContent(this.dataCS, 'CSharp.cs', 'text/CSharp');
     }
   }
 }
