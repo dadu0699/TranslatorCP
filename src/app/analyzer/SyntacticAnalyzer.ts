@@ -668,12 +668,11 @@ export class SyntacticAnalyzer {
                     this.syntacticError = false;
                 }
             } else {
-                if (this.preAnalysis.getTypeToken() == type) {
-                    this.index++;
-                    this.preAnalysis = this.tokenList[this.index];
-                } else {
+                if (this.preAnalysis.getTypeToken() != type) {
                     this.addError(this.preAnalysis.getValue() + ' Was expected \'' + type + '\'');
                 }
+                this.index++;
+                this.preAnalysis = this.tokenList[this.index];
             }
         }
     }
