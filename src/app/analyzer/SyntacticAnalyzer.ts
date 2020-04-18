@@ -666,11 +666,6 @@ export class SyntacticAnalyzer {
                     || this.preAnalysis.getTypeToken() == Type.SYMBOL_LEFT_CURLY_BRACKET
                     || this.preAnalysis.getTypeToken() == Type.SYMBOL_RIGHT_CURLY_BRACKET) {
                     this.syntacticError = false;
-                    /* if (this.preAnalysis.getTypeToken() == Type.SYMBOL_SEMICOLON) {
-                         this.index--;
-                         this.preAnalysis = this.tokenList[this.index];
-                        }
-                    */
                 }
             } else {
                 if (this.preAnalysis.getTypeToken() == type) {
