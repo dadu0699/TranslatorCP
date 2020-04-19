@@ -44,7 +44,8 @@ export class Report {
             this.fileContent += '<tr>';
             this.fileContent += '<th>' + item.getIDToken() + '</th>';
             this.fileContent += '<th>' + item.getValue()
-                .replace('<', '&lt;').replace('>', '&gt;') + '</th>';
+                .split('<').join('&lt;')
+                .split('>').join('&gt;') + '</th>';
             this.fileContent += '<th>' + item.getTypeToken() + '</th>';
             this.fileContent += '<th>' + item.getRow() + '</th>';
             this.fileContent += '<th>' + item.getColumn() + '</th>';
@@ -76,7 +77,8 @@ export class Report {
             this.fileContent += '<th>' + item.getIDError() + '</th>';
             this.fileContent += '<th>' + item.getType() + '</th>';
             this.fileContent += '<th>' + item.getCharacter()
-                .replace('<', '&lt;').replace('>', '&gt;') + '</th>';
+                .split('<').join('&lt;')
+                .split('>').join('&gt;') + '</th>';
             this.fileContent += '<th>' + item.getDescription() + '</th>';
             this.fileContent += '<th>' + item.getRow() + '</th>';
             this.fileContent += '<th>' + item.getColumn() + '</th>';
