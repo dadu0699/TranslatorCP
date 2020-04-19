@@ -473,27 +473,23 @@ export class Translator {
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_NOT) {
 
             while (this.tokenList[this.index + 1].getTypeToken() != Type.SYMBOL_SEMICOLON) {
-                expression += this.preAnalysis.getValue();
+                if (this.preAnalysis.getTypeToken() == Type.SYMBOL_AND) {
+                    this.translate += this.preAnalysis.getValue().replace('&&', ' and ');
+                } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_OR) {
+                    this.translate += this.preAnalysis.getValue().replace('||', ' or ');
+                } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_NOT) {
+                    this.translate += this.preAnalysis.getValue().replace('!', ' not ');
+                } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_PLUS
+                    && ((this.tokenList[this.index - 1].getTypeToken() != Type.DIGIT
+                        && this.tokenList[this.index - 1].getTypeToken() != Type.DECIMAL)
+                        || (this.tokenList[this.index + 1].getTypeToken() != Type.DIGIT
+                            && this.tokenList[this.index + 1].getTypeToken() != Type.DECIMAL))) {
+                    this.translate += this.preAnalysis.getValue().replace('+', ',');
+                } else {
+                    this.translate += this.preAnalysis.getValue();
+                }
                 this.nextToken();
             }
-
-            expression = expression.replace('&&', ' and ').replace('||', ' or ');
-            for (let i = 0; i < expression.length; i++) {
-                if ((i + 1) < expression.length) {
-                    if (expression[i] == '+'
-                        && (this.isLetter(expression[i - 1]) || expression[i - 1] == '"')
-                        && (this.isLetter(expression[i + 1]) || expression[i + 1] == '"')) {
-                        auxContent = expression.substring(0, i) + ','
-                            + expression.substring(i + 1, expression.length);
-                        expression = auxContent;
-                    } else if (expression[i] == '!' && this.isLetter(expression[i + 1])) {
-                        auxContent = expression.substring(0, i) + ' not '
-                            + expression.substring(i + 1, expression.length);
-                        expression = auxContent;
-                    }
-                }
-            }
-            this.translate += expression;
         }
     }
 
