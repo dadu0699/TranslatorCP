@@ -258,8 +258,6 @@ export class Translator {
     }
 
     private declaration(): void {
-        this.translate += '\n';
-        this.addIndentation();
         this.type();
         this.idList();
         this.nextToken(); // SYMBOL_SEMICOLON
@@ -267,12 +265,19 @@ export class Translator {
 
     private idList(): void {
         this.nextToken(); // ID
-        this.assignVariable();
-        if (this.tokenList[this.index - 2].getTypeToken() == Type.SYMBOL_EQUALS
-            && this.tokenList[this.index].getTypeToken() != Type.SYMBOL_SEMICOLON) {
-            this.translate += '\n';
-            this.addIndentation();
+
+        let auxIndex: number = this.index;
+        while (this.tokenList[auxIndex].getTypeToken() != Type.SYMBOL_SEMICOLON) {
+            if (this.tokenList[auxIndex].getTypeToken() == Type.SYMBOL_EQUALS) {
+                this.translate += '\n';
+                this.addIndentation();
+                this.translate += 'var ';
+                break;
+            }
+            auxIndex++;
         }
+
+        this.assignVariable();
         this.idListP();
     }
 
@@ -292,6 +297,23 @@ export class Translator {
         } else if (this.preAnalysis.getTypeToken() == Type.SYMBOL_INCREMENT
             || this.preAnalysis.getTypeToken() == Type.SYMBOL_DECREMENT) {
             this.iterator();
+        } else {
+            let auxIndex: number = this.index;
+            let expressionIndex: number = this.index;
+            while (this.tokenList[auxIndex].getTypeToken() != Type.SYMBOL_SEMICOLON) {
+                if (this.tokenList[auxIndex].getTypeToken() == Type.SYMBOL_EQUALS) {
+                    this.translate += this.tokenList[this.index - 1].getValue() + ' ';
+                    this.translate += '=';
+                    while (this.tokenList[expressionIndex + 1].getTypeToken() != Type.SYMBOL_SEMICOLON) {
+                        this.translate += ' ' + this.tokenList[expressionIndex + 1].getValue()
+                            .replace('true', 'True').replace('false', 'False');
+                        expressionIndex++;
+                    }
+                    break;
+                }
+                auxIndex++;
+                expressionIndex++;
+            }
         }
     }
 
