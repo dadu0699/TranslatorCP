@@ -129,6 +129,16 @@ export class PrettierHTML {
             this.addIndentationJSON();
             this.translate += '"BODY": {\n';
             this.counterTabulations++;
+            if (this.preAnalysis.getValue() === '<body style="background:yellow">'
+                || this.preAnalysis.getValue() === '<body style="background:green">'
+                || this.preAnalysis.getValue() === '<body style="background:blue">'
+                || this.preAnalysis.getValue() === '<body style="background:red">'
+                || this.preAnalysis.getValue() === '<body style="background:white">'
+                || this.preAnalysis.getValue() === '<body style="background:skyblue">') {
+                this.addIndentationJSON();
+                let style: string = this.preAnalysis.getValue().split('=')[1]
+                this.translate += '"STYLE": ' + style.substring(0, style.length - 1) + ',\n';
+            }
             this.nextToken(); // BODY OPENING TAG
             this.instruction();
             this.counterTabulations--;
@@ -157,6 +167,16 @@ export class PrettierHTML {
             this.addIndentationJSON();
             this.translate += '"DIV": {\n';
             this.counterTabulations++;
+            if (this.preAnalysis.getValue() === '<div style="background:yellow">'
+                || this.preAnalysis.getValue() === '<div style="background:green">'
+                || this.preAnalysis.getValue() === '<div style="background:blue">'
+                || this.preAnalysis.getValue() === '<div style="background:red">'
+                || this.preAnalysis.getValue() === '<div style="background:white">'
+                || this.preAnalysis.getValue() === '<div style="background:skyblue">') {
+                this.addIndentationJSON();
+                let style: string = this.preAnalysis.getValue().split('=')[1]
+                this.translate += '"STYLE": ' + style.substring(0, style.length - 1) + ',\n';
+            }
             this.nextToken(); // DIV OPENING TAG
             this.instruction();
             this.counterTabulations--;
