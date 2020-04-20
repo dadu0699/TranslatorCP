@@ -72,7 +72,7 @@ export class PrettierHTML {
 
     private start(): void {
         this.doctype();
-        this.translate += 'html: {\n';
+        this.translate += '"HTML": {\n';
         this.counterTabulations++;
         this.nextToken(); // HTML OPENING TAG
         this.head();
@@ -91,13 +91,13 @@ export class PrettierHTML {
     private head(): void {
         if (this.preAnalysis.getTypeToken() == Type.HEAD_TAG) {
             this.addIndentationJSON();
-            this.translate += 'head: {\n';
+            this.translate += '"HEAD": {\n';
             this.counterTabulations++;
             this.nextToken(); // HEAD OPENING TAG
             this.title();
             this.counterTabulations--;
             this.addIndentationJSON();
-            this.translate += '}\n';
+            this.translate += '},\n';
             this.nextToken(); // HEAD CLOSING TAG
         }
     }
@@ -105,7 +105,7 @@ export class PrettierHTML {
     private title(): void {
         if (this.preAnalysis.getTypeToken() == Type.TITLE_TAG) {
             this.addIndentationJSON();
-            this.translate += 'title: {\n';
+            this.translate += '"TITLE": {\n';
             this.counterTabulations++;
             this.nextToken(); // TITLE OPENING TAG
             this.content();
@@ -119,7 +119,7 @@ export class PrettierHTML {
     private content(): void {
         if (this.preAnalysis.getTypeToken() == Type.CONTENT) {
             this.addIndentationJSON();
-            this.translate += 'text: "' + this.preAnalysis.getValue() + '"\n';
+            this.translate += '"TEXT": "' + this.preAnalysis.getValue() + '"\n';
             this.nextToken(); // CONTENT
         }
     }
@@ -127,7 +127,7 @@ export class PrettierHTML {
     private body(): void {
         if (this.preAnalysis.getTypeToken() == Type.BODY_TAG) {
             this.addIndentationJSON();
-            this.translate += 'body: {\n';
+            this.translate += '"BODY": {\n';
             this.counterTabulations++;
             this.nextToken(); // BODY OPENING TAG
             this.instruction();
@@ -155,7 +155,7 @@ export class PrettierHTML {
     private instructionP(): void {
         if (this.preAnalysis.getTypeToken() == Type.DIV_TAG) {
             this.addIndentationJSON();
-            this.translate += 'div: {\n';
+            this.translate += '"DIV": {\n';
             this.counterTabulations++;
             this.nextToken(); // DIV OPENING TAG
             this.instruction();
@@ -165,11 +165,11 @@ export class PrettierHTML {
             this.nextToken(); // DIV CLOSING TAG
         } else if (this.preAnalysis.getTypeToken() == Type.BR_TAG) {
             this.addIndentationJSON();
-            this.translate += 'br,\n';
+            this.translate += '"BR",\n';
             this.nextToken(); // BR OPENING TAG
         } else if (this.preAnalysis.getTypeToken() == Type.P_TAG) {
             this.addIndentationJSON();
-            this.translate += 'p: {\n';
+            this.translate += '"P": {\n';
             this.counterTabulations++;
             this.nextToken(); // P OPENING TAG
             this.instruction();
@@ -179,7 +179,7 @@ export class PrettierHTML {
             this.nextToken(); // P CLOSING TAG
         } else if (this.preAnalysis.getTypeToken() == Type.H1_TAG) {
             this.addIndentationJSON();
-            this.translate += 'h1: {\n';
+            this.translate += '"H1": {\n';
             this.counterTabulations++;
             this.nextToken(); // H1 OPENING TAG
             this.instruction();
@@ -189,7 +189,7 @@ export class PrettierHTML {
             this.nextToken(); // H1 CLOSING TAG
         } else if (this.preAnalysis.getTypeToken() == Type.BUTTON_TAG) {
             this.addIndentationJSON();
-            this.translate += 'button: {\n';
+            this.translate += '"BUTTON": {\n';
             this.counterTabulations++;
             this.nextToken(); // BUTTON OPENING TAG
             this.instruction();
@@ -199,7 +199,7 @@ export class PrettierHTML {
             this.nextToken(); // H1 CLOSING TAG
         } else if (this.preAnalysis.getTypeToken() == Type.LABEL_TAG) {
             this.addIndentationJSON();
-            this.translate += 'label: {\n';
+            this.translate += '"LABEL": {\n';
             this.counterTabulations++;
             this.nextToken(); // LABEL OPENING TAG
             this.instruction();
@@ -209,11 +209,11 @@ export class PrettierHTML {
             this.nextToken(); // H1 CLOSING TAG
         } else if (this.preAnalysis.getTypeToken() == Type.INPUT_TAG) {
             this.addIndentationJSON();
-            this.translate += 'input,\n';
+            this.translate += '"IMPUT",\n';
             this.nextToken(); // INPUT OPENING TAG
         } else if (this.preAnalysis.getTypeToken() == Type.CONTENT) {
             this.addIndentationJSON();
-            this.translate += 'text: "' + this.preAnalysis.getValue() + '",\n';
+            this.translate += '"TEXT": "' + this.preAnalysis.getValue() + '",\n';
             this.nextToken(); // CONTENT OPENING TAG
         }
     }
