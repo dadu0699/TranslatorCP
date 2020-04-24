@@ -90,7 +90,10 @@ export class HTMLAnalyzer {
 
     private addOpeningTag(): void {
         switch (this.auxiliary.toLowerCase()) {
-            case '<!doctype html>': {
+            case '<!doctypehtml>': {
+                this.auxiliary = this.auxiliary
+                    .replace('DOCTYPE', 'DOCTYPE ')
+                    .replace('doctype', 'doctype ');
                 this.addToken(Type.DOCTYPE_TAG);
                 break;
             } case '<html>': {

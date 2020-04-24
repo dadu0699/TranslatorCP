@@ -185,7 +185,7 @@ export class PrettierHTML {
             this.nextToken(); // DIV CLOSING TAG
         } else if (this.preAnalysis.getTypeToken() == Type.BR_TAG) {
             this.addIndentationJSON();
-            this.translate += '"BR",\n';
+            this.translate += '"BR": "\\n",\n';
             this.nextToken(); // BR OPENING TAG
         } else if (this.preAnalysis.getTypeToken() == Type.P_TAG) {
             this.addIndentationJSON();
