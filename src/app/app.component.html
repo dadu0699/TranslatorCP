@@ -5,11 +5,10 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-12 col-lg-6">
-      <mat-tab-group [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)" class="bg-dark"
-        dynamicHeight="true">
-        <mat-tab *ngFor="let tab of tabs; let index = index" [label]="tab">
+      <mat-tab-group class="bg-dark" dynamicHeight="true">
+        <mat-tab label="C#">
           <ng-template matTabContent>
-            <app-cs-editor (newTab)="addTab()"></app-cs-editor>
+            <app-cs-editor></app-cs-editor>
           </ng-template>
         </mat-tab>
       </mat-tab-group>

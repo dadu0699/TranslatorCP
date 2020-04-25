@@ -28,8 +28,6 @@ export class CsEditorComponent implements OnInit {
 
   private file: File;
 
-  @Output() newTab = new EventEmitter();
-
   constructor(private _snackBar: MatSnackBar, private _data: DataService) {
     this.name = 'CSharp Properties';
     this.codeMirrorCSOptions = {

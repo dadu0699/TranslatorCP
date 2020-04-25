@@ -9,19 +9,9 @@ import { FormControl } from '@angular/forms';
 export class AppComponent implements OnInit {
   title = 'TranslatorCP';
   tabs = ['CSHARP'];
-  selected = new FormControl(0);
 
   constructor() { }
 
   ngOnInit() {
-  }
-
-  addTab() {
-    this.tabs.push('NEW');
-    this.selected.setValue(this.tabs.length - 1);
-  }
-
-  removeTab(index: number) {
-    this.tabs.splice(index, 1);
   }
 }
