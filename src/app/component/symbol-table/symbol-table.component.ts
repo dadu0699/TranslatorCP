@@ -18,7 +18,8 @@ export class SymbolTableComponent implements OnInit {
   dataSource: any;
 
   constructor(private _data: DataService) {
-    this.page_size = 7;
+    this.page_size = 14;
+    this.pageSizeOptions = [this.page_size];
     this.page_number = 1;
     this.displayedColumns = ['name', 'type', 'line'];
     this.dataSource = new MatTableDataSource<Symbol>();
