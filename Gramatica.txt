@@ -1,0 +1,196 @@
+-----------------------------------------------------------------------------
+GRAMATICA C#
+-----------------------------------------------------------------------------
+INICIO -> COMENTARIO T_class T_id T_llaveIzq CCLASS T_llaveDcho COMENTARIO
+		| ε
+
+COMENTARIO -> COMENTARIO' COMENTARIO
+			| ε
+
+COMENTARIO' -> T_simple
+			| T_multilinea
+			
+CCLASS -> CCLASS' CCLASS 
+		| ε
+				
+CCLASS' -> METODO
+		| COMENTARIO
+		| DECLARACION
+			
+METODO -> METODO' METODO
+		| ε
+		
+METODO' -> TIPOMETODO T_id T_parentesisIzq PARAM T_parentesisDcho CUERPO
+
+TIPOMETODO -> T_void
+			| TIPO
+
+TIPO -> | T_int
+		| T_string
+		| T_double
+		| T_bool
+		| T_HTML	
+
+PARAMETROMET -> PARAM
+			| ε
+
+PARAM -> TIPO T_id PARAM'
+
+PARAM' -> T_coma PARAM
+		| ε
+		
+CUERPO -> T_llaveIzq INST T_llaveDcho
+
+INST -> INST' INST
+		| ε
+			
+INST' -> DECLARACION
+		| ASIGNACION
+		| IMPRIMIR
+		| IF
+		| SWITCH
+		| FOR
+		| WHILE
+		| DOWHILE
+		| RETURN
+		| BREAK
+		| CONTINUE
+		| COMENTARIO
+		
+DECLARACION -> TIPO LISTAID T_puntoComa
+
+LISTAID -> T_id ASIGVAR LISTAID'
+
+LISTAID' -> T_coma LISTAID
+		| ε
+		
+ASIGVAR -> T_igual EXPRESION
+		| ITERADOR
+		| ε
+
+EXPRESION -> FACTOR EXPRESION'
+		
+EXPRESION' -> ARITMETICO EXPRESION
+			| ε
+
+FACTOR -> T_parentesisIzq  EXPRESION T_parentesisDcho // CORREGIR
+		| T_digito
+		| T_decimal
+		| T_id LLAMADAMETODO
+		| T_cadena_doble
+		| T_cadena_simple
+		| T_true
+		| T_false
+
+LLAMADAMETODO -> T_parentesisIzq EXPRESION LLAMADAMETODO' T_parentesisDcho
+				| ε
+				
+LLAMADAMETODO' -> T_coma EXPRESION LLAMADAMETODO'
+				| ε
+
+ARITMETICO -> T_suma
+			| T_resta
+			| T_multiplicacion
+			| T_division
+			
+ITERADOR -> T_masMas
+			| T_menosMenos
+			
+ASIGNACION -> T_id ASIGVAR T_puntoComa
+
+IMPRIMIR -> T_console T_punto T_write T_parentesisIzq IMPVAL S_parentesis_dcho S_punto_y_coma
+
+IMPVAL -> EXPRESION
+		| T_html
+
+IF -> T_if T_parentesisIzq CONDICION T_parentesisDcho CUERPO ELSE
+
+CONDICION -> NOT EXPRESION CONDICION'
+			
+CONDICION' -> OPERADOR CONDICION
+			| ε
+
+NOT -> T_negacion
+	| ε
+	
+OPERADOR -> | LOGICO
+			| RELACIONAL
+			
+LOGICO -> T_and
+		| T_or
+		
+RELACIONAL -> T_mayor
+			| T_menor
+			| T_mayorIgual
+			| T_menorIgual
+			| T_comparacion
+			| T_distinto
+
+ELSE -> T_else ELSEIF CUERPO ELSE
+		| ε
+
+ELSEIF -> T_if T_parentesisIzq CONDICION T_parentesisDcho
+		| ε
+
+SWITCH -> T_switch T_parentesisIzq CONDICION T_parentesisDcho T_llaveIzq CASE DEFAULT T_llaveDcho
+
+CASE -> CASE' CASE
+		| ε 
+		
+CASE' -> T_case EXPRESION T_dosPuntos INST 
+
+DEFAULT -> T_default T_dosPuntos INST
+		| ε 
+
+FOR -> T_for T_parentesisIzq INICIALIZADOR CONDICION T_puntoComa ASIGITERADOR T_parentesisDcho CUERPO
+
+INICIALIZADOR -> DECLARACION
+				| ASIGNACION
+				
+ASIGITERADOR -> T_id ITERADOR
+
+WHILE -> T_while T_parentesisIzq CONDICION T_parentesisDcho CUERPO
+
+DOWHILE -> T_do CUERPO T_while T_parentesisIzq CONDICION T_parentesisDcho T_puntoComa
+		
+RETURN -> T_Return RETURN' T_puntoComa 
+		
+RETURN' -> CONDICION
+		| ε 
+		
+BREAK -> T_break T_puntoComa
+
+CONTINUE -> T_continue T_puntoComa 
+
+
+-----------------------------------------------------------------------------
+GRAMATICA HTML
+-----------------------------------------------------------------------------
+INICIO -> DOCTYPE T_html HEAD BODY T_htmlClosing
+
+DOCTYPE -> T_doctype
+		| ε
+		
+HEAD -> T_head TITLE T_headClosing
+		| ε
+		
+TITLE -> T_title CONTENT T_titleClosing
+		| ε
+		
+CONTENT -> T_content
+		| ε
+		
+BODY -> T_body INST T_bodyClosing
+		| ε
+		
+INST -> INST' INST
+	| ε
+
+INST' -> T_div INST T_divClosing
+		| T_br
+		| T_p INST T_pClosing
+		| T_h1 INST T_h1Closing
+		| T_button INST T_buttonClosing
+		| T_label INT T_ labelClosing
+		| T_input INT T_inputClosing
+		| T_content
