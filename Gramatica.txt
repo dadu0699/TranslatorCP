@@ -20,7 +20,7 @@ CCLASS' -> METODO
 METODO -> METODO' METODO
 		| ε
 		
-METODO' -> TIPOMETODO T_id T_parentesisIzq PARAM T_parentesisDcho CUERPO
+METODO' -> TIPOMETODO T_id T_parentesisIzq PARAMETROMET T_parentesisDcho CUERPO
 
 TIPOMETODO -> T_void
 			| TIPO
